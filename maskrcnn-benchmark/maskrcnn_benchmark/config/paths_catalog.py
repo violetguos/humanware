@@ -31,11 +31,11 @@ class DatasetCatalog(object):
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/instances_valminusminival2014.json"
         },
-        "humanware_v1_1553272293_train": {
+        "coco_humanware_v1_1553272293_train": {
             "img_dir": "Humanware_v1_1553272293/train",
             "ann_file": "Humanware_v1_1553272293/train/instances_train.json"
         },
-        "humanware_v1_1553272293_valid": {
+        "coco_humanware_v1_1553272293_val": {
             "img_dir": "Humanware_v1_1553272293/valid",
             "ann_file": "Humanware_v1_1553272293/valid/instances_valid.json"
         },
