@@ -22,8 +22,7 @@ MODEL:
     PREDICTOR: "FPNPredictor"
     NUM_CLASSES: 1
 DATASETS:
-  TRAIN: ("humanware_v1_1553272293_train",)
-  TEST: ("humanware_v1_1553272293_valid",)
+  TRAIN: ("humanware_v1_1553272293_train", "humanware_v1_1553272293_valid")
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
