@@ -31,6 +31,14 @@ class DatasetCatalog(object):
             "img_dir": "coco/val2014",
             "ann_file": "coco/annotations/instances_valminusminival2014.json"
         },
+        "humanware_v1_1553272293_train": {
+            "img_dir": "Humanware_v1_1553272293/train",
+            "ann_file": "Humanware_v1_1553272293/train/instances_train.json"
+        },
+        "humanware_v1_1553272293_valid": {
+            "img_dir": "Humanware_v1_1553272293/valid",
+            "ann_file": "Humanware_v1_1553272293/valid/instances_valid.json"
+        },
         "keypoints_coco_2014_train": {
             "img_dir": "coco/train2014",
             "ann_file": "coco/annotations/person_keypoints_train2014.json",
@@ -181,7 +189,8 @@ class ModelCatalog(object):
         # we use as identifiers in the catalog Caffe2Detectron/COCO/<model_id>/<model_name>
         prefix = ModelCatalog.S3_C2_DETECTRON_URL
         dataset_tag = "keypoints_" if "keypoint" in name else ""
-        suffix = ModelCatalog.C2_DETECTRON_SUFFIX.format(dataset_tag, dataset_tag)
+        suffix = ModelCatalog.C2_DETECTRON_SUFFIX.format(
+            dataset_tag, dataset_tag)
         # remove identification prefix
         name = name[len("Caffe2Detectron/COCO/"):]
         # split in <model_id> and <model_name>
@@ -190,5 +199,6 @@ class ModelCatalog(object):
         model_name = "{}.yaml".format(model_name)
         signature = ModelCatalog.C2_DETECTRON_MODELS[name]
         unique_name = ".".join([model_name, signature])
-        url = "/".join([prefix, model_id, "12_2017_baselines", unique_name, suffix])
+        url = "/".join([prefix, model_id, "12_2017_baselines",
+                        unique_name, suffix])
         return url
