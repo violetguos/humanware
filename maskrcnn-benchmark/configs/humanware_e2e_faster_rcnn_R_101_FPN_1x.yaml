@@ -22,14 +22,15 @@ MODEL:
     PREDICTOR: "FPNPredictor"
     NUM_CLASSES: 2
 DATASETS:
-  TRAIN: ("coco_humanware_v1_1553272293_train", "coco_humanware_v1_1553272293_val")
+  TRAIN: ("coco_humanware_v1_1553272293_train", )
+  TEST: ("coco_humanware_v1_1553272293_val", )
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
   BASE_LR: 0.0025
   WEIGHT_DECAY: 0.0001
-  STEPS: (480000, 640000)
-  MAX_ITER: 720000
+  STEPS: (2400, 3200)
+  MAX_ITER: 3600
   IMS_PER_BATCH: 2
 TEST:
   IMS_PER_BATCH: 1
