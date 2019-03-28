@@ -1,3 +1,11 @@
+### Pycarhm IDE files ###
+*.idea/
+*.xml
+
+## Helios files to ignore ##
+*.err
+*.out
+
 #########Latex############
 ## Core latex/pdflatex auxiliary files:
 *.aux
