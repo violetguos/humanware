@@ -1,0 +1,55 @@
+2019-03-29 01:23:31,255 maskrcnn_benchmark.inference INFO: Start evaluation on coco_humanware_v1_1553272293_train dataset(5000 images).
+2019-03-29 01:53:40,540 maskrcnn_benchmark.inference INFO: Total run time: 0:30:09.281101 (0.36185622029304504 s / img per device, on 1 devices)
+2019-03-29 01:53:40,543 maskrcnn_benchmark.inference INFO: Model inference time: 0:28:45.091684 (0.34501833672523496 s / img per device, on 1 devices)
+2019-03-29 01:53:42,490 maskrcnn_benchmark.inference INFO: Preparing results for COCO format
+2019-03-29 01:53:42,490 maskrcnn_benchmark.inference INFO: Preparing bbox results
+2019-03-29 01:53:43,770 maskrcnn_benchmark.inference INFO: Evaluating predictions
+Loading and preparing results...
+DONE (t=0.04s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=3.84s).
+Accumulating evaluation results...
+DONE (t=0.63s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.843
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.982
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.960
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.841
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.845
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.869
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.882
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.882
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.888
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.871
+2019-03-29 01:53:48,587 maskrcnn_benchmark.inference INFO: OrderedDict([('bbox', OrderedDict([('AP', 0.842530098087003), ('AP50', 0.9824962319852297), ('AP75', 0.959903225751343), ('APs', -1.0), ('APm', 0.8409949451270806), ('APl', 0.8454931780811379)]))])
+2019-03-29 01:53:48,688 maskrcnn_benchmark.inference INFO: Start evaluation on coco_humanware_v1_1553272293_val dataset(1000 images).
+2019-03-29 01:59:49,703 maskrcnn_benchmark.inference INFO: Total run time: 0:06:00.952997 (0.360952996969223 s / img per device, on 1 devices)
+2019-03-29 01:59:49,705 maskrcnn_benchmark.inference INFO: Model inference time: 0:05:43.739373 (0.3437393732070923 s / img per device, on 1 devices)
+2019-03-29 01:59:50,006 maskrcnn_benchmark.inference INFO: Preparing results for COCO format
+2019-03-29 01:59:50,006 maskrcnn_benchmark.inference INFO: Preparing bbox results
+2019-03-29 01:59:50,236 maskrcnn_benchmark.inference INFO: Evaluating predictions
+Loading and preparing results...
+DONE (t=0.01s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.77s).
+Accumulating evaluation results...
+DONE (t=0.11s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.833
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.981
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.958
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.824
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.840
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.855
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.872
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.872
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.875
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.866
