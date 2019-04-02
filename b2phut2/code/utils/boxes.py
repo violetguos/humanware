@@ -86,14 +86,13 @@ def read_bbox(sample, padding=0.3):
     '''
     read the bbox.json file
     '''
-
-    id = sample['img_id']
-    # TODO: chang this hardcoded string
-    data_dir = 'data/r_50_7200/coco_humanware_v1_1553272293_val/bbox.json'
+    id = sample['metadata']['img_id']
+    # TODO: change this hardcoded string
+    data_dir = '../../data/r_50_7200/coco_humanware_v1_1553272293_val/bbox.json'
 
     with open(data_dir, 'r') as f:
         val_dict = json.load(f)
 
     # get the original bbox from json file in FAST RCNN output
-    print(val_dict[id]['bbox'])
-    return val_dict
+    # print(val_dict[id]['bbox'])
+    return val_dict[id]['bbox']

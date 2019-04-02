@@ -44,11 +44,13 @@ class FirstCrop(object):
         labels = sample['metadata']['labels']
         boxes = sample['metadata']['boxes']
         filename = sample['metadata']['filename']
+
         # old B2 T2 implementation
         # outer_box = extract_outer_box(sample, padding=self.pad_size)
 
         # begin my hack
         outer_box = read_bbox(sample, padding=self.pad_size)
+        print("outer_box", outer_box)
         # end my hack
         outer_box = np.round(outer_box).astype('int')
 
