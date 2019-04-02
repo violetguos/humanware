@@ -202,5 +202,5 @@ if __name__ == '__main__':
         model.load_state_dict(model_dict["model_state_dict"])
         model_optimizer.load_state_dict(model_dict["optimizer_state_dict"])
         current_trainer.load_state_dict(model_dict)
-    # don't train
-    # current_trainer.fit(current_hyper_params_dict)
+    
+    current_trainer.fit(current_hyper_params_dict)
