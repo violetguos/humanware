@@ -1,6 +1,7 @@
 import numpy as np
 import json
 
+
 def extract_labels_boxes(meta):
     '''
     Extract the labels and boxes from the raw metadata.
@@ -82,17 +83,46 @@ def extract_outer_box(sample, padding=0.3):
 
     return outer_bbox
 
+
 def read_bbox(sample, padding=0.3):
     '''
     read the bbox.json file
     '''
     id = sample['metadata']['img_id']
     # TODO: change this hardcoded string
+    # TODO: pull from master and change this to train vs val
     data_dir = '../../data/r_50_7200/coco_humanware_v1_1553272293_val/bbox.json'
 
     with open(data_dir, 'r') as f:
         val_dict = json.load(f)
 
+    boxes = val_dict[id]['bbox']
+    print("bbox from json boxes {} {}".format(type(boxes), boxes))
+
+    img_shape = np.asarray(sample['image']).shape
+
+    # coco dataset is `x_top_left`, `y_top_left`, `width` and `height`
+
+    x1_tot = boxes[0]
+    x2_tot = boxes[1]
+    y1_tot = boxes[2]
+    y2_tot = boxes[3]
+
+    x1_tot -= padding / 2 * (x2_tot - x1_tot)
+    x2_tot += padding / 2 * (x2_tot - x1_tot)
+    y1_tot -= padding / 2 * (y2_tot - y1_tot)
+    y2_tot += padding / 2 * (y2_tot - y1_tot)
+
+    x1_tot = max(0, x1_tot)
+    x2_tot = min(x2_tot, img_shape[1] - 1)
+    y1_tot = max(0, y1_tot)
+    y2_tot = min(y2_tot, img_shape[0] - 1)
+
+    outer_bbox = (x1_tot, x2_tot, y1_tot, y2_tot)
+    print("***********************")
+    print("outer_bbox", outer_bbox)
+    print("***********************")
+
     # get the original bbox from json file in FAST RCNN output
     # print(val_dict[id]['bbox'])
-    return val_dict[id]['bbox']
+    return outer_bbox

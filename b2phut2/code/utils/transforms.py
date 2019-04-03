@@ -49,8 +49,8 @@ class FirstCrop(object):
         # outer_box = extract_outer_box(sample, padding=self.pad_size)
 
         # begin my hack
+        # padding not used yet
         outer_box = read_bbox(sample, padding=self.pad_size)
-        print("outer_box", outer_box)
         # end my hack
         outer_box = np.round(outer_box).astype('int')
 
@@ -103,11 +103,17 @@ class Rescale(object):
             transformation.
 
         '''
+        # FIXME: smaple image is empty
+
         image = sample['image']
         boxes = sample['metadata']['boxes']
         labels = sample['metadata']['labels']
         filename = sample['metadata']['filename']
 
+        print('image', image)
+        print('filename', filename)
+        print("sample", sample)
+        print("np.asarray(image).shape", np.asarray(image).shape)
         h, w = np.asarray(image).shape[:2]
 
         new_h, new_w = self.output_size

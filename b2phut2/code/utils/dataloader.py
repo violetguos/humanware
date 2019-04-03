@@ -92,6 +92,8 @@ class SVHNDataset(data.Dataset):
 
         # Load data and get raw metadata (labels & boxes)
         image = Image.open(img_name)
+        # FIXME: check why this image_1 is zero
+
         metadata_raw = self.metadata[index]['metadata']
         # inner boxes no longer present
 
@@ -179,10 +181,13 @@ def prepare_dataloaders(dataset_split,
                                     random_crop,
                                     to_tensor
                                     ])
-
+    print("data_dir", dataset_path)
     dataset = SVHNDataset(metadata,
                           data_dir=dataset_path,
                           transform=transform, normalize_transform=normalize)
+
+    # The extra file was given in block 2, we don't need it for block3 
+    
     # if extra_metadata_filename is not None:
     #     extra_metadata = load_obj(extra_metadata_filename)
     #     extra_dataset = SVHNDataset(extra_metadata,

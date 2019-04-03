@@ -8,7 +8,7 @@ export SVHN_DIR='/rap/jvb-000-aa/COURS2019/etudiants/data/humanware/Humanware_v1
 export DATA_DIR=$SVHN_DIR/train
 export TMP_DATA_DIR=$DATA_DIR
 export TMP_RESULTS_DIR=$DATA_DIR
-export METADATA_FILENAME='/rap/jvb-000-aa/COURS2019/etudiants/data/humanware/SVHN/train_metadata.pkl'
+export METADATA_FILENAME='/rap/jvb-000-aa/COURS2019/etudiants/data/humanware/Humanware_v1_1553272293/train/avenue_train_metadata_split.pkl'
 
 source /rap/jvb-000-aa/COURS2019/etudiants/common.env
 
@@ -17,22 +17,7 @@ echo $HOME
 
 echo $PATH
 
-# if [ ! -f $SVHN_DIR'/train.tar.gz' ]; then
-if [ 1 -eq 0 ]; then
-    echo "Downloading files for the training set!"
-    wget -P $SVHN_DIR http://ufldl.stanford.edu/housenumbers/train.tar.gz
-fi
 
-# if [ ! -d $TMP_DATA_DIR ]; then
-if [ 1 -eq 0 ]; then
-    echo "Extracting Files to " $TMP_DATA_DIR
-    cp $DATA_DIR'/train.tar.gz' $TMP_DATA_DIR
-    tar -xzf $TMP_DATA_DIR'/train.tar.gz' -C $TMP_DATA_DIR
-    echo "Extraction finished!"
-
-else
-    echo "Train files already present"
-fi
 
 python /home/user50/humanware/b2phut2/code/test_loader_new_data.py \
     --dataset_dir=$TMP_DATA_DIR --metadata_filename=$METADATA_FILENAME \

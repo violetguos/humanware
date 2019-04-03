@@ -2,6 +2,7 @@ class StatsRecorder:
     """
     Object that wraps all the stats related values. They are saved in the model states, so you can load them again.
     """
+    
     def __init__(self):
         self.train_loss_history = []
         self.test_best_accuracy = 0.0

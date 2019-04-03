@@ -7,6 +7,7 @@ class BaseTrainer(AbstractTrainer):
     """
     BaseTrainer class that fits the given model
     """
+
     def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, device, output_dir, hyper_params,
                  max_patience):
         """
@@ -33,7 +34,6 @@ class BaseTrainer(AbstractTrainer):
         train_n_iter = 0
         # Set model to train mode
         self.model.train()
-        print("see if called")
         print("self.epoch", self.epoch)
         # Iterate over train data
         print("Iterating over training data...")

@@ -74,11 +74,11 @@ class PerformanceEvaluator(object):
                         number_true = 0
                         for i in range(length_predictions[sample_idx]):
                             number_predicted += digits_predictions[i][sample_idx] * 10 ** (
-                                    (length_predictions[sample_idx] - 1) - i)
+                                (length_predictions[sample_idx] - 1) - i)
                         for i in range(digits_target.shape[1]):
                             if digits_target[sample_idx][i] != -1:
                                 number_true += digits_target[sample_idx][i] * 10 ** (
-                                        (length_target[sample_idx] - 1) - i)
+                                    (length_target[sample_idx] - 1) - i)
                         y_pred.append(int(number_predicted.item()))
                         y_true.append(int(number_true.item()))
 

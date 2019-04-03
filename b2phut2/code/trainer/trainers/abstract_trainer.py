@@ -19,12 +19,10 @@ from trainer.summary_writer import TBSummaryWriter
 
 
 class AbstractTrainer(ABC):
-    """
-    Abstract class that fits the given model
-    """
+    """Abstract class that fits the given model"""
 
-    def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, device, output_dir, hyper_params,
-                 max_patience=5):
+    def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, 
+                 device, output_dir, hyper_params, max_patience=5):
         """
         :param model: pytorch model
         :param optimizer: pytorch optimizaer
@@ -64,6 +62,7 @@ class AbstractTrainer(ABC):
         """
         if self.comet_ml_experiment is None and self.cfg.COMET_ML_UPLOAD is True:
             # Create an experiment
+            # TODO: change the api key to mine
             self.comet_ml_experiment = Experiment(api_key="TAOEZkbwnavYnudi3hA9VxBfU",
                                                   project_name="general", workspace="lap1n")
             if self.comet_ml_experiment.disabled is True:
@@ -74,6 +73,11 @@ class AbstractTrainer(ABC):
             self.comet_ml_experiment.log_parameters(hyper_params)
 
     def fit(self, current_hyper_params, hyper_param_search_state=None):
+        """
+        Fit function applied train, val, test to all models.
+        Each train/val/test may differe for each model
+        I/O is the same, so wrap them with this method and do logging
+        """
         self.initialize_cometml_experiment(current_hyper_params)
         print("# Start training #")
         since = time.time()
@@ -111,7 +115,8 @@ class AbstractTrainer(ABC):
         Validate the model
         :param model: pytorch model
         """
-        self.valid_evaluator.evaluate(model, self.device, self.stats, mode="valid")
+        self.valid_evaluator.evaluate(
+            model, self.device, self.stats, mode="valid")
 
     def test(self, model):
         """
@@ -119,7 +124,8 @@ class AbstractTrainer(ABC):
         :param model: pytorch model
         """
         model = model.to(self.device)
-        self.test_evaluator.evaluate(model, self.device, self.stats, mode="test")
+        self.test_evaluator.evaluate(
+            model, self.device, self.stats, mode="test")
 
     def early_stopping_check(self, model, hyper_param_search_state=None):
         """
@@ -133,8 +139,10 @@ class AbstractTrainer(ABC):
             self.stats.valid_best_accuracy = last_accuracy_computed
             self.best_model = copy.deepcopy(model)
             print('Checkpointing new model...')
-            model_filename = self.output_dir + '/checkpoint_{}.pth'.format(self.stats.valid_best_accuracy)
-            self.save_current_best_model(model_filename, hyper_param_search_state)
+            model_filename = self.output_dir + \
+                '/checkpoint_{}.pth'.format(self.stats.valid_best_accuracy)
+            self.save_current_best_model(
+                model_filename, hyper_param_search_state)
             if self.last_checkpoint_filename is not None:
                 os.remove(self.last_checkpoint_filename)
             self.last_checkpoint_filename = model_filename
@@ -156,7 +164,8 @@ class AbstractTrainer(ABC):
         """
         loss = torch.nn.functional.cross_entropy(length_logits, length_labels)
         for i in range(digits_labels.shape[1]):
-            loss = loss + torch.nn.functional.cross_entropy(digits_logits[i], digits_labels[:, i], ignore_index=-1)
+            loss = loss + torch.nn.functional.cross_entropy(
+                digits_logits[i], digits_labels[:, i], ignore_index=-1)
         return loss
 
     def load_state_dict(self, state_dict):
@@ -221,7 +230,8 @@ class AbstractTrainer(ABC):
 
         # For each digit predicted
         target_digit = targets[:, 1:]
-        loss = self.compute_loss(pred_length, pred_sequences, target_ndigits, target_digit)
+        loss = self.compute_loss(
+            pred_length, pred_sequences, target_ndigits, target_digit)
         # Backward
         loss.backward()
         # Optimize

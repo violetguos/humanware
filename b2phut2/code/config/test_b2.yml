@@ -6,11 +6,11 @@ SEED: 23
 # Hyperparameters related to model training
 TRAIN:
   DATASET_SPLIT: 'train'
-  VALID_SPLIT: 0.95 # make train set very small
-  TEST_SPLIT: 0.95
-  SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
-  BATCH_SIZE: 8 # small batch size # resnet18 can handle 350 batches, resnet50 64
-  NUM_EPOCHS: 4 # minimal number of epoches just to see it's training
+  VALID_SPLIT: 0.1 
+  TEST_SPLIT: 0.1
+  SAMPLE_SIZE: 100 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
+  BATCH_SIZE: 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
+  NUM_EPOCHS: 10 # minimal number of epoches just to see it's training
   MAX_PATIENCE: 4
   LR_SCHEDULER_PARAMS:
     MILESTONES: [1,2]
