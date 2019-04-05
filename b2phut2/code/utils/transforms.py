@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 # read the bounding box input from FAST-RCNN instead
-from utils.boxes import extract_outer_box, read_bbox
+from utils.boxes import extract_outer_box
 
 
 class FirstCrop(object):
@@ -45,13 +45,8 @@ class FirstCrop(object):
         boxes = sample['metadata']['boxes']
         filename = sample['metadata']['filename']
 
-        # old B2 T2 implementation
-        # outer_box = extract_outer_box(sample, padding=self.pad_size)
-
-        # begin my hack
-        # padding not used yet
-        outer_box = read_bbox(sample, padding=self.pad_size)
-        # end my hack
+        # TODO: add extract outer box from bbox.json
+        outer_box = extract_outer_box(sample, padding=self.pad_size)
         outer_box = np.round(outer_box).astype('int')
 
         x1_tot, x2_tot, y1_tot, y2_tot = outer_box
@@ -103,17 +98,12 @@ class Rescale(object):
             transformation.
 
         '''
-        # FIXME: smaple image is empty
 
         image = sample['image']
         boxes = sample['metadata']['boxes']
         labels = sample['metadata']['labels']
         filename = sample['metadata']['filename']
 
-        print('image', image)
-        print('filename', filename)
-        print("sample", sample)
-        print("np.asarray(image).shape", np.asarray(image).shape)
         h, w = np.asarray(image).shape[:2]
 
         new_h, new_w = self.output_size
@@ -238,7 +228,6 @@ class ToTensor(object):
         image = image.transpose((2, 0, 1))
         image = torch.from_numpy(image).float()
 
-        # TODO
         # Process boxes
 
         labels = np.asarray(labels)

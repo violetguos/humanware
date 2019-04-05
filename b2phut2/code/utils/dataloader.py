@@ -7,7 +7,12 @@ import numpy as np
 import torch
 
 from torchvision import transforms
-from torch.utils.data import DataLoader, ConcatDataset, Subset, SubsetRandomSampler
+from torch.utils.data import (
+    DataLoader,
+    ConcatDataset,
+    Subset,
+    # SubsetRandomSampler,
+)
 
 from utils.transforms import FirstCrop, Rescale, RandomCrop, ToTensor
 from utils.misc import load_obj
@@ -15,9 +20,10 @@ from utils.boxes import extract_labels_boxes
 
 
 class SVHNDataset(data.Dataset):
-
-    def __init__(self, metadata, data_dir, transform=None, normalize_transform=None):
-        '''
+    def __init__(
+        self, metadata, data_dir, transform=None, normalize_transform=None
+    ):
+        """
         Initialize the Dataset.
 
         Parameters
@@ -48,14 +54,14 @@ class SVHNDataset(data.Dataset):
         transform : callable, optional
             Optional transform to be applied on a sample.
 
-        '''
+        """
         self.metadata = metadata
         self.data_dir = data_dir
         self.transform = transform
         self.normalize_transform = normalize_transform
 
     def __len__(self):
-        '''
+        """
         Evaluate the length of the dataset object
 
         Returns
@@ -63,11 +69,11 @@ class SVHNDataset(data.Dataset):
         int
             The length of the dataset.
 
-        '''
+        """
         return len(self.metadata)
 
     def __getitem__(self, index):
-        '''
+        """
         Get an indexed item from the dataset and return it.
 
         Parameters
@@ -84,30 +90,35 @@ class SVHNDataset(data.Dataset):
             image. It can be one of ['labels','boxes','filename']
 
 
-        '''
-        'Generates one sample of data'
+        """
+        "Generates one sample of data"
 
-        img_name = os.path.join(self.data_dir,
-                                self.metadata[index]['filename'])
+        img_name = os.path.join(
+            self.data_dir, self.metadata[index]["filename"]
+        )
 
         # Load data and get raw metadata (labels & boxes)
         image = Image.open(img_name)
-        # FIXME: check why this image_1 is zero
 
-        metadata_raw = self.metadata[index]['metadata']
+        metadata_raw = self.metadata[index]["metadata"]
         # inner boxes no longer present
-
         labels, boxes = extract_labels_boxes(metadata_raw)
 
-        # need to add index
+        # need to add index to index into bbox.json
+        # IMP: this doesn't affect training
         # begin my hack
-        metadata = {'labels': labels, 'boxes': boxes, 'filename': img_name, 'img_id': index}
+        metadata = {
+            "labels": labels,
+            "boxes": boxes,
+            "filename": img_name,
+            "img_id": index,
+        }
         # end my hack
 
-        # old B2 T2 implementation, keep records
+        # old B2 T2 implementation of the above, keep records
         # metadata = {'labels': labels, 'boxes': boxes, 'filename': img_name}
 
-        sample = {'image': image, 'metadata': metadata}
+        sample = {"image": image, "metadata": metadata}
 
         if self.transform:
             sample = self.transform(sample)
@@ -117,17 +128,19 @@ class SVHNDataset(data.Dataset):
         return sample
 
 
-def prepare_dataloaders(dataset_split,
-                        dataset_path,
-                        metadata_filename,
-                        batch_size=32,
-                        sample_size=-1,
-                        valid_split=0.1,
-                        test_split=0.1,
-                        num_worker=0,
-                        extra_metadata_filename=None,
-                        extra_dataset_dir=None):
-    '''
+def prepare_dataloaders(
+    dataset_split,
+    dataset_path,
+    metadata_filename,
+    batch_size=32,
+    sample_size=-1,
+    valid_split=0.1,
+    test_split=0.1,
+    num_worker=0,
+    extra_metadata_filename=None,
+    extra_dataset_dir=None,
+):
+    """
     Utility function to prepare dataloaders for training.
 
     Parameters
@@ -159,9 +172,9 @@ def prepare_dataloaders(dataset_split,
         test_loader: torch.utils.DataLoader
             Dataloader containing test data.
 
-    '''
+    """
 
-    assert dataset_split in ['train', 'test', 'extra'], "check dataset_split"
+    assert dataset_split in ["train", "test", "extra"], "check dataset_split"
 
     metadata = load_obj(metadata_filename)
 
@@ -176,18 +189,18 @@ def prepare_dataloaders(dataset_split,
 
     # Declare transformations
 
-    transform = transforms.Compose([firstcrop,
-                                    downscale,
-                                    random_crop,
-                                    to_tensor
-                                    ])
-    print("data_dir", dataset_path)
-    dataset = SVHNDataset(metadata,
-                          data_dir=dataset_path,
-                          transform=transform, normalize_transform=normalize)
+    transform = transforms.Compose(
+        [firstcrop, downscale, random_crop, to_tensor]
+    )
+    dataset = SVHNDataset(
+        metadata,
+        data_dir=dataset_path,
+        transform=transform,
+        normalize_transform=normalize,
+    )
 
-    # The extra file was given in block 2, we don't need it for block3 
-    
+    # The extra file was given in block 2, we MAY need it for block3
+
     # if extra_metadata_filename is not None:
     #     extra_metadata = load_obj(extra_metadata_filename)
     #     extra_dataset = SVHNDataset(extra_metadata,
@@ -200,19 +213,16 @@ def prepare_dataloaders(dataset_split,
     # Only use a sample amount of data
     if sample_size != -1:
         indices = indices[:sample_size]
+        dataset_length = sample_size
 
-    if dataset_split in ['train', 'extra']:
+    if dataset_split in ["train", "extra"]:
 
-        # [train_subset, valid_subset, test_from_train_subset] = random_split(dataset,
-        #                                                                     [,
-        #                                                                      ,
-        #                                                                      ])
         train_length = round(dataset_length * (1 - valid_split - test_split))
         valid_length = round(dataset_length * valid_split)
 
         train_idx = indices[:train_length]
-        valid_idx = indices[train_length:train_length + valid_length]
-        test_idx = indices[train_length + valid_length:]
+        valid_idx = indices[train_length:(train_length + valid_length)]
+        test_idx = indices[(train_length + valid_length):]
 
         train_subset = Subset(dataset, train_idx)
         valid_subset = Subset(dataset, valid_idx)
@@ -221,34 +231,45 @@ def prepare_dataloaders(dataset_split,
         # Prepare a train and validation dataloader
         if extra_metadata_filename is not None:
             extra_metadata = load_obj(extra_metadata_filename)
-            extra_dataset = SVHNDataset(extra_metadata,
-                                        data_dir=extra_dataset_dir,
-                                        transform=transform, normalize_transform=normalize)
+            extra_dataset = SVHNDataset(
+                extra_metadata,
+                data_dir=extra_dataset_dir,
+                transform=transform,
+                normalize_transform=normalize,
+            )
             train_subset = ConcatDataset([train_subset, extra_dataset])
-        train_loader = DataLoader(train_subset,
-                                  batch_size=batch_size,
-                                  shuffle=False,
-                                  num_workers=num_worker)
-        valid_loader = DataLoader(valid_subset,
-                                  batch_size=batch_size,
-                                  shuffle=False,
-                                  num_workers=num_worker)
-        test_from_train_loader = DataLoader(test_from_train_subset,
-                                            batch_size=batch_size,
-                                            shuffle=False,
-                                            num_workers=num_worker)
+        train_loader = DataLoader(
+            train_subset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_worker,
+        )
+        valid_loader = DataLoader(
+            valid_subset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_worker,
+        )
+        test_from_train_loader = DataLoader(
+            test_from_train_subset,
+            batch_size=batch_size,
+            shuffle=False,
+            num_workers=num_worker,
+        )
 
         return train_loader, valid_loader, test_from_train_loader
 
-    elif dataset_split in ['test']:
+    elif dataset_split in ["test"]:
 
         test_sampler = torch.utils.data.SequentialSampler(indices)
 
         # Prepare a test dataloader
-        test_loader = DataLoader(dataset,
-                                 batch_size=batch_size,
-                                 num_workers=4,
-                                 shuffle=False,
-                                 sampler=test_sampler)
+        test_loader = DataLoader(
+            dataset,
+            batch_size=batch_size,
+            num_workers=4,
+            shuffle=False,
+            sampler=test_sampler,
+        )
 
         return test_loader

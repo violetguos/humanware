@@ -1,4 +1,3 @@
-import gc
 import os
 
 from comet_ml import Experiment
@@ -21,8 +20,19 @@ from trainer.summary_writer import TBSummaryWriter
 class AbstractTrainer(ABC):
     """Abstract class that fits the given model"""
 
-    def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, 
-                 device, output_dir, hyper_params, max_patience=5):
+    def __init__(
+        self,
+        model,
+        optimizer,
+        cfg,
+        train_loader,
+        valid_loader,
+        test_loader,
+        device,
+        output_dir,
+        hyper_params,
+        max_patience=5,
+    ):
         """
         :param model: pytorch model
         :param optimizer: pytorch optimizaer
@@ -30,9 +40,11 @@ class AbstractTrainer(ABC):
         :param train_loader: train data loader
         :param valid_loade: valid data laoder
         :param device: gpu device used (ex: cuda:0)
-        :param output_dir: output directory where the model and the results will be located
+        :param output_dir: output directory where the model and the results
+            will be located
         :param hyper_params: hyper parameters
-        :param max_patience: max number of iteration without seeing improvement in accuracy
+        :param max_patience: max number of iteration without seeing
+            improvement in accuracy
         """
         self.model = model.to(device)
         self.optimizer = optimizer
@@ -60,16 +72,24 @@ class AbstractTrainer(ABC):
         :param hyper_params: current hyper parameters dictionary
         :return:
         """
-        if self.comet_ml_experiment is None and self.cfg.COMET_ML_UPLOAD is True:
+        if (
+            self.comet_ml_experiment is None
+            and self.cfg.COMET_ML_UPLOAD is True
+        ):
             # Create an experiment
-            # TODO: change the api key to mine
-            self.comet_ml_experiment = Experiment(api_key="TAOEZkbwnavYnudi3hA9VxBfU",
-                                                  project_name="general", workspace="lap1n")
+            self.comet_ml_experiment = Experiment(
+                api_key="Ts8wMpv9UACikZG6a4O1lJHs5",
+                project_name="general",
+                workspace="proguoram",
+            )
             if self.comet_ml_experiment.disabled is True:
                 # There is problably no internet (in the cluster for example)
                 # So we create a offline experiment
-                self.comet_ml_experiment = OfflineExperiment(workspace="lap1n", project_name="general",
-                                                             offline_directory=self.output_dir)
+                self.comet_ml_experiment = OfflineExperiment(
+                    workspace="proguoram",
+                    project_name="general",
+                    offline_directory=self.output_dir,
+                )
             self.comet_ml_experiment.log_parameters(hyper_params)
 
     def fit(self, current_hyper_params, hyper_param_search_state=None):
@@ -78,7 +98,8 @@ class AbstractTrainer(ABC):
         Each train/val/test may differe for each model
         I/O is the same, so wrap them with this method and do logging
         """
-        self.initialize_cometml_experiment(current_hyper_params)
+        # FIXME: disable comet for now
+        # self.initialize_cometml_experiment(current_hyper_params)
         print("# Start training #")
         since = time.time()
 
@@ -89,7 +110,9 @@ class AbstractTrainer(ABC):
             self.train(current_hyper_params)
             self.validate(self.model)
             self.epoch = epoch
-            print('\nEpoch: {}/{}'.format(epoch + 1, self.cfg.TRAIN.NUM_EPOCHS))
+            print(
+                "\nEpoch: {}/{}".format(epoch + 1, self.cfg.TRAIN.NUM_EPOCHS)
+            )
             self.stats.print_last_epoch_stats()
             summary_writer.add_stats(self.stats, epoch)
             if self.cfg.COMET_ML_UPLOAD is True:
@@ -98,8 +121,11 @@ class AbstractTrainer(ABC):
                 break
         time_elapsed = time.time() - since
         self.add_plots_summary(summary_writer)
-        print('\n\nTraining complete in {:.0f}m {:.0f}s'.format(
-            time_elapsed // 60, time_elapsed % 60))
+        print(
+            "\n\nTraining complete in {:.0f}m {:.0f}s".format(
+                time_elapsed // 60, time_elapsed % 60
+            )
+        )
 
     @classmethod
     @abstractmethod
@@ -116,7 +142,8 @@ class AbstractTrainer(ABC):
         :param model: pytorch model
         """
         self.valid_evaluator.evaluate(
-            model, self.device, self.stats, mode="valid")
+            model, self.device, self.stats, mode="valid"
+        )
 
     def test(self, model):
         """
@@ -125,7 +152,8 @@ class AbstractTrainer(ABC):
         """
         model = model.to(self.device)
         self.test_evaluator.evaluate(
-            model, self.device, self.stats, mode="test")
+            model, self.device, self.stats, mode="test"
+        )
 
     def early_stopping_check(self, model, hyper_param_search_state=None):
         """
@@ -138,11 +166,13 @@ class AbstractTrainer(ABC):
         if last_accuracy_computed > self.stats.valid_best_accuracy:
             self.stats.valid_best_accuracy = last_accuracy_computed
             self.best_model = copy.deepcopy(model)
-            print('Checkpointing new model...')
-            model_filename = self.output_dir + \
-                '/checkpoint_{}.pth'.format(self.stats.valid_best_accuracy)
+            print("Checkpointing new model...")
+            model_filename = self.output_dir + "/checkpoint_{}.pth".format(
+                self.stats.valid_best_accuracy
+            )
             self.save_current_best_model(
-                model_filename, hyper_param_search_state)
+                model_filename, hyper_param_search_state
+            )
             if self.last_checkpoint_filename is not None:
                 os.remove(self.last_checkpoint_filename)
             self.last_checkpoint_filename = model_filename
@@ -153,7 +183,9 @@ class AbstractTrainer(ABC):
                 return True
         return False
 
-    def compute_loss(self, length_logits, digits_logits, length_labels, digits_labels):
+    def compute_loss(
+        self, length_logits, digits_logits, length_labels, digits_labels
+    ):
         """
         Multi loss computing function
         :param length_logits: length logits tensor (N x 7)
@@ -165,7 +197,8 @@ class AbstractTrainer(ABC):
         loss = torch.nn.functional.cross_entropy(length_logits, length_labels)
         for i in range(digits_labels.shape[1]):
             loss = loss + torch.nn.functional.cross_entropy(
-                digits_logits[i], digits_labels[:, i], ignore_index=-1)
+                digits_logits[i], digits_labels[:, i], ignore_index=-1
+            )
         return loss
 
     def load_state_dict(self, state_dict):
@@ -189,14 +222,14 @@ class AbstractTrainer(ABC):
          """
         seed = np.random.get_state()[1][0]
         return {
-            'epoch': self.epoch + 1,
-            'model_state_dict': self.best_model.state_dict(),
-            'optimizer_state_dict': self.optimizer.state_dict(),
-            'stats': self.stats,
-            'seed': seed,
-            'current_patience': self.current_patience,
-            'hyper_param_search_state': hyper_param_search_state,
-            'hyper_params': self.hyper_params,
+            "epoch": self.epoch + 1,
+            "model_state_dict": self.best_model.state_dict(),
+            "optimizer_state_dict": self.optimizer.state_dict(),
+            "stats": self.stats,
+            "seed": seed,
+            "current_patience": self.current_patience,
+            "hyper_param_search_state": hyper_param_search_state,
+            "hyper_params": self.hyper_params,
         }
 
     def save_current_best_model(self, out_path, hyper_param_search_state=None):
@@ -216,7 +249,7 @@ class AbstractTrainer(ABC):
         :param batch: batch
         :return: loss tensor value
         """
-        inputs, targets = batch['image'], batch['target']
+        inputs, targets = batch["image"], batch["target"]
 
         inputs = inputs.to(self.device)
         targets = targets.long().to(self.device)
@@ -231,7 +264,8 @@ class AbstractTrainer(ABC):
         # For each digit predicted
         target_digit = targets[:, 1:]
         loss = self.compute_loss(
-            pred_length, pred_sequences, target_ndigits, target_digit)
+            pred_length, pred_sequences, target_ndigits, target_digit
+        )
         # Backward
         loss.backward()
         # Optimize
@@ -245,13 +279,17 @@ class AbstractTrainer(ABC):
         :param summary_writer: Summary writer object from tensor board
         """
         # plot loss curves
-        loss_dict = {'Train loss': self.stats.train_loss_history,
-                     'Valid loss': self.stats.valid_losses}
-        axis_labels = {'x': "Epochs", 'y': "Loss"}
+        loss_dict = {
+            "Train loss": self.stats.train_loss_history,
+            "Valid loss": self.stats.valid_losses,
+        }
+        axis_labels = {"x": "Epochs", "y": "Loss"}
         summary_writer.plot_curves(loss_dict, "Learning curves", axis_labels)
 
         # plot accuracy curves
-        acc_dict = {'Valid accuracy': self.stats.valid_accuracies,
-                    'Length accuracy': self.stats.length_accuracy}
-        axis_labels = {'x': "Epochs", 'y': "Accuracy"}
+        acc_dict = {
+            "Valid accuracy": self.stats.valid_accuracies,
+            "Length accuracy": self.stats.length_accuracy,
+        }
+        axis_labels = {"x": "Epochs", "y": "Accuracy"}
         summary_writer.plot_curves(acc_dict, "Accuracy curves", axis_labels)

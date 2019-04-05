@@ -13,7 +13,9 @@ class PerformanceEvaluator(object):
         """
         self.loader = eval_set
 
-    def evaluate(self, model, device, stats_recorder, mode="valid", include_length=True):
+    def evaluate(
+        self, model, device, stats_recorder, mode="valid", include_length=True
+    ):
         """
         Evaluate the model, the result are saved in the stats recorder object
         :param model: pytorch model
@@ -39,7 +41,7 @@ class PerformanceEvaluator(object):
             y_pred = []
             for batch_index, batch in enumerate(tqdm(self.loader)):
                 # get the inputs
-                inputs, targets = batch['image'], batch['target']
+                inputs, targets = batch["image"], batch["target"]
 
                 inputs = inputs.to(device)
                 length_target = targets[:, 0].long().to(device)
@@ -47,7 +49,9 @@ class PerformanceEvaluator(object):
 
                 length_logits, digits_logits = model(inputs)
                 length_predictions = length_logits.max(1)[1]
-                digits_predictions = [digit_logits.max(1)[1] for digit_logits in digits_logits]
+                digits_predictions = [
+                    digit_logits.max(1)[1] for digit_logits in digits_logits
+                ]
 
                 # We first check the sequence length
                 is_output_correct = length_predictions.eq(length_target)
@@ -55,30 +59,41 @@ class PerformanceEvaluator(object):
                 length_accuracy += is_output_correct.sum()
 
                 if include_length is False:
-                    is_output_correct = torch.ones(length_target.shape[0]).byte().to(device)
+                    is_output_correct = (
+                        torch.ones(length_target.shape[0]).byte().to(device)
+                    )
 
-                loss = torch.nn.functional.cross_entropy(length_logits, length_target)
+                loss = torch.nn.functional.cross_entropy(
+                    length_logits, length_target
+                )
                 # We then check the digits output
                 for i in range(digits_target.shape[1]):
-                    is_digit_correct = digits_predictions[i].eq(digits_target[:, i])
-                    is_digit_not_there = (digits_target[:, i] == -1)
+                    is_digit_correct = digits_predictions[i].eq(
+                        digits_target[:, i]
+                    )
+                    is_digit_not_there = digits_target[:, i] == -1
                     digits_accuracy[i] += is_digit_correct.float().sum()
                     no_digits_count[i] += is_digit_not_there.float().sum()
                     total_digits_count[i] += (digits_target[:, i] != -1).sum()
                     is_output_correct &= is_digit_correct + is_digit_not_there
-                    loss = loss + torch.nn.functional.cross_entropy(digits_logits[i], digits_target[:, i],
-                                                                    ignore_index=-1)
+                    loss = loss + torch.nn.functional.cross_entropy(
+                        digits_logits[i], digits_target[:, i], ignore_index=-1
+                    )
                 if mode == "test":
                     for sample_idx in range(digits_target.shape[0]):
                         number_predicted = 0
                         number_true = 0
                         for i in range(length_predictions[sample_idx]):
-                            number_predicted += digits_predictions[i][sample_idx] * 10 ** (
-                                (length_predictions[sample_idx] - 1) - i)
+                            number_predicted += digits_predictions[i][
+                                sample_idx
+                            ] * 10 ** (
+                                (length_predictions[sample_idx] - 1) - i
+                            )
                         for i in range(digits_target.shape[1]):
                             if digits_target[sample_idx][i] != -1:
-                                number_true += digits_target[sample_idx][i] * 10 ** (
-                                    (length_target[sample_idx] - 1) - i)
+                                number_true += digits_target[sample_idx][
+                                    i
+                                ] * 10 ** ((length_target[sample_idx] - 1) - i)
                         y_pred.append(int(number_predicted.item()))
                         y_true.append(int(number_true.item()))
 
@@ -87,11 +102,16 @@ class PerformanceEvaluator(object):
                 valid_total_loss += loss.item()
 
             valid_accuracy = float(num_correct.item()) / valid_n_sample
+
             valid_loss = valid_total_loss / (batch_index + 1)
 
             if mode == "valid":
-                stats_recorder.length_accuracy.append(length_accuracy.float() / valid_n_sample)
-                stats_recorder.digits_accuracy.append(digits_accuracy.data.div(total_digits_count.data))
+                stats_recorder.length_accuracy.append(
+                    length_accuracy.float() / valid_n_sample
+                )
+                stats_recorder.digits_accuracy.append(
+                    digits_accuracy.data.div(total_digits_count.data)
+                )
 
                 stats_recorder.valid_accuracies.append(valid_accuracy)
                 stats_recorder.valid_losses.append(valid_loss)
