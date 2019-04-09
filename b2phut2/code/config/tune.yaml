@@ -13,7 +13,7 @@ TRAIN:
   NUM_EPOCHS: 50 # minimal number of epoches just to see it's training
   MAX_PATIENCE: 50 # same as the total epoches for testing purposes
   LR_SCHEDULER_PARAMS:
-    MILESTONES: [1,2]
+    MILESTONES: [20,40]
     GAMMA: 0.1
   NUM_WORKER: 0
 MODEL:
