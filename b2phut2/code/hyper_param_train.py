@@ -1,6 +1,4 @@
 from __future__ import print_function
-# Import comet_ml in the top of your file
-from comet_ml import Experiment
 
 import os
 import sys
@@ -87,7 +85,6 @@ if __name__ == '__main__':
         return torch.optim.SGD(model.parameters(), lr=hyper_params["LR"],
                                momentum=hyper_params["MOM"],
                                weight_decay=float(hyper_params["WEIGHT_DECAY"]))
-
 
     hyper_param_searcher = HyperParamsSearcher(model_creation_function=instantiate_model,
                                                trainer_creation_function=instantiate_trainer,

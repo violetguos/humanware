@@ -1,8 +1,5 @@
 from __future__ import print_function
 
-# Import comet_ml in the top of your file
-from comet_ml import Experiment
-
 import argparse
 import datetime
 import os
@@ -20,7 +17,6 @@ from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
 from models.resnet import ResNet34
-from trainer.trainers.base_trainer import BaseTrainer
 from trainer.trainers.lr_scheduler_trainer import LRSchedulerTrainer
 from utils.config import cfg, cfg_from_file
 from utils.dataloader import prepare_dataloaders

@@ -7,9 +7,7 @@ import torch
 import time
 
 import random
-from sklearn.metrics import confusion_matrix
 
-import os
 import sys
 sys.path.append('../')
 from utils.dataloader import prepare_dataloaders

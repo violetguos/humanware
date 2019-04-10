@@ -34,7 +34,7 @@ def dump_tensors(gpu_only=True):
                                                    " volatile" if obj.volatile else "",
                                                    pretty_size(obj.data.size())))
                     total_size += obj.data.numel()
-        except Exception as e:
+        except Exception:
             pass
     print("Total size:", total_size)
     print(" Memory usage :", print_gpu_memory())
