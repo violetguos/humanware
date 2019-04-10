@@ -5,4 +5,4 @@ python:
 install:
   - pip install -q flake8==3.7.6
 script:
-  - flake8 horoma --ignore=W,E501 --exclude maskrcnn-benchmark
+  - flake8 --ignore=W,E501 --exclude maskrcnn-benchmark
