@@ -6,6 +6,11 @@
 *.err
 *.out
 
+## specific files to ignore while trying to port Block 2 T2 code ##
+b2phut2/b2phut2_report.pdf
+
+
+
 #########Latex############
 ## Core latex/pdflatex auxiliary files:
 *.aux
