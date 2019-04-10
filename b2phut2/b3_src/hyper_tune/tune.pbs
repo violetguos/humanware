@@ -9,12 +9,8 @@
 module --force purge
 
 PATH=$PATH:/opt/software/singularity-3.0/bin/
-
 # set the working directory to where the job is launched
 cd "${PBS_O_WORKDIR}"
 export PATH=$PATH:/opt/software/singularity-3.0/bin/
-export PYTHONPATH="${PYTHONPATH}:/humanware"
-export PYTHONPATH="${PYTHONPATH}:/humanware/b2phut2"
-
 
 s_exec bash -ex tune.sh
