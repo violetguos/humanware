@@ -2,6 +2,9 @@
 
 set -e
 
+export CUDA_HOME=/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx/Compiler/intel2016.4/cuda/9.0.176
+export LD_LIBRARY_PATH=/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx/Compiler/intel2016.4/cuda/9.0.176/lib64/:$LD_LIBRARY_PATH
+
 CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT_DIR=`cd $CURR_DIR/../ && pwd`
 MASKRCNN_DIR=$ROOT_DIR/"maskrcnn-benchmark"
@@ -39,16 +42,20 @@ check_error "***** Unable to compile maskrcnn *****"
 
 # cleanup stale files
 rm -rf $INFERENCE_DIR \
-    $TEST_DIR
+    $TEST_DIR \
+    $MASKRCNN_DIR/model_final.pth \
+    $MASKRCNN_DIR/last_checkpoint
 
 # set up soft link to DATA_DIR
 ln -s $DATA_DIR $TEST_DIR
+
+# set up soft link to best model
+ln -s $BEST_RCNN_MODEL $MASKRCNN_DIR/model_final.pth
 
 echo "Running maskrcnn on test set..."
 cd $MASKRCNN_DIR
 python tools/test_net.py \
     --config-file configs/humanware_best.yaml
-    MODEL.WEIGHT $BEST_RCNN_MODEL
 
 check_error "Unable to run maskrcnn on test set"
 
