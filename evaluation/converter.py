@@ -76,4 +76,4 @@ if __name__ == '__main__':
         help="Output file path",
     )
     args = parser.parse_args()
-    convert(**args)
+    convert(args.instance_file, args.bbox_file, args.output_file)
