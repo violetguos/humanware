@@ -101,6 +101,7 @@ class AbstractTrainer(ABC):
         # FIXME: disable comet for now
         # self.initialize_cometml_experiment(current_hyper_params)
         print("# Start training #")
+        print("self.epoch", self.epoch)
         since = time.time()
 
         summary_writer = TBSummaryWriter(self.output_dir, current_hyper_params)

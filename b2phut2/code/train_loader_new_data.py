@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-# Import comet_ml in the top of your file
-
 import os
 
 import sys
@@ -101,7 +99,6 @@ if __name__ == "__main__":
         num_worker=cfg.TRAIN.NUM_WORKER,
     )
     print("Start training from ", cfg.INPUT_DIR)
-    # print("valid loader", next(iter(valid_loader)))
 
     current_hyper_params_dict = (
         cfg.HYPER_PARAMS.INITIAL_VALUES
@@ -115,4 +112,12 @@ if __name__ == "__main__":
         model, model_optimizer, current_hyper_params_dict
     )
 
+    if model_dict is not None:
+        model.load_state_dict(model_dict["model_state_dict"])
+        model_optimizer.load_state_dict(model_dict["optimizer_state_dict"])
+        current_trainer.load_state_dict(model_dict)
+
+    # begin hack for supporting checkpoint model re-load and retrain
+    if args.model is not None:
+        current_trainer.epoch = 0  # reset to retrain from a checkpoint
     current_trainer.fit(current_hyper_params_dict)

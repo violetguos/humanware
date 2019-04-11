@@ -15,4 +15,5 @@ source /rap/jvb-000-aa/COURS2019/etudiants/common.env
 
 PYTHONPATH=$B2_ROOT_DIR python -u $B2_ROOT_DIR/train_loader_new_data.py \
     --dataset_dir=$DATA_DIR --metadata_filename=$METADATA_FILENAME \
-    --results_dir=$HOME/humanware/results --cfg=$B2_ROOT_DIR/config/train_b2.yaml
+    --results_dir=$HOME/humanware/results --cfg=$B2_ROOT_DIR/config/retrain_b2.yaml \
+    --model=$ROOT_DIR/humanware/saved_models/block2_model/best_model.pth

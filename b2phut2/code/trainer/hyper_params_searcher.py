@@ -78,13 +78,15 @@ class HyperParamsSearcher:
             self.current_trainer.load_state_dict(self.state_dict)
 
         self.current_trainer.fit(current_hyper_params_dict, hyper_param_state)
-        return self.current_trainer.stats.valid_best_accuracy.item()
+        return self.current_trainer.stats.valid_best_accuracy #! type error from origanl code .item()
 
     def search(self, initial_hyper_params=None):
         """
         Start the hyper parameters search
         :param initial_hyper_params: (optional) initial hyper parameters values from the config files
         """
+        print("******************************")
+        print("in search start_iteration", self.start_iteration)
         for i in range(self.start_iteration, self.n_calls, 1):
             print("\n\n[Hyper Param Iteration {}]".format(i + 1))
             if i == 0 and initial_hyper_params is not None:
@@ -102,6 +104,7 @@ class HyperParamsSearcher:
             print("Current hyper-parameters : {}".format(current_hyper_params_dict))
             hyper_param_state = self.get_state_dict(i)
             f_val = self._objective(current_hyper_params_dict, hyper_param_state)
+            print("f_val", f_val)
             self.minimizer.tell(current_hyper_params_list, f_val)
             print("Score = {}".format(f_val))
             if self.best_score < f_val:

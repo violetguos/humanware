@@ -34,7 +34,6 @@ class BaseTrainer(AbstractTrainer):
         train_n_iter = 0
         # Set model to train mode
         self.model.train()
-        print("self.epoch", self.epoch)
         # Iterate over train data
         print("Iterating over training data...")
         for i, batch in enumerate(tqdm(self.train_loader)):
