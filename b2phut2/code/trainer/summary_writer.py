@@ -79,5 +79,7 @@ class TBSummaryWriter:
         plt.xlabel(axis_labels['x'])
         plt.ylabel(axis_labels['y'])
         plt.legend()
+        # replace blank spaces in the file names, useful for latex
+        title.replace(" ", "_")
         plt.savefig(self.log_path + title + '.png')
         self.writer.add_figure(title, plt.gcf(), close=True)
