@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-# Import comet_ml in the top of your file
-
 import os
 
 import sys
