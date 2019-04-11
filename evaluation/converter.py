@@ -9,10 +9,10 @@ import pickle
 
 
 def convert(instance_file, bbox_file, output_file):
-    with open(instance_file):
-        instance_file_data = json.load(instance_file)
-    with open(bbox_file):
-        bbox_file_data = json.load(bbox_file)
+    with open(instance_file) as fob:
+        instance_file_data = json.load(fob)
+    with open(bbox_file) as fob:
+        bbox_file_data = json.load(fob)
 
     new_bbox_format = {}
     # loop and select the box with most score
@@ -28,7 +28,7 @@ def convert(instance_file, bbox_file, output_file):
         if image_id not in new_bbox_format:
             new_bbox_format[image_id] = box
             continue
-        last_score = new_bbox_format[image_id]['box']
+        last_score = new_bbox_format[image_id]['score']
         if last_score < score:
             new_bbox_format[image_id] = box
 
@@ -39,19 +39,20 @@ def convert(instance_file, bbox_file, output_file):
         bbox_info = new_bbox_format.get(image_id, None)
         if bbox_info is None:
             # use a fake bbox
-            bbox_info = [372.32, 374.93, 61.69, 62.60]
-
+            bbox_info = {
+                'bbox': [372.32, 374.93, 61.69, 62.60]}
+        bbox_info = bbox_info['bbox']
         metadata[image_id] = {
             'filename': instance['file_name'],
             'metadata': {
                 'label': [1],
                 'left': [bbox_info[0]],
                 'top': [bbox_info[1]],
-                'height': [bbox_file[2]],
-                'width': [bbox_file[3]],
+                'height': [bbox_info[2]],
+                'width': [bbox_info[3]],
             }
         }
-    with open(output_file, 'rb') as fob:
+    with open(output_file, 'wb') as fob:
         pickle.dump(metadata, fob)
 
 
