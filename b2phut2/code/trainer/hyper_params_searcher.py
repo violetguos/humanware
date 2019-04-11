@@ -78,7 +78,9 @@ class HyperParamsSearcher:
             self.current_trainer.load_state_dict(self.state_dict)
 
         self.current_trainer.fit(current_hyper_params_dict, hyper_param_state)
-        return self.current_trainer.stats.valid_best_accuracy #! type error from origanl code .item()
+        # ! type error from origanl code 
+        # return self.current_trainer.stats.valid_best_accuracy.item()
+        return self.current_trainer.stats.valid_best_accuracy
 
     def search(self, initial_hyper_params=None):
         """
