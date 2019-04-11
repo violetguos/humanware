@@ -39,6 +39,10 @@ class DatasetCatalog(object):
             "img_dir": "Humanware_v1_1553272293/valid",
             "ann_file": "Humanware_v1_1553272293/valid/instances_valid.json"
         },
+        "coco_humanware_test": {
+            "img_dir": "test_dir",
+            "ann_file": "test_dir/instances_test.json"
+        },
         "keypoints_coco_2014_train": {
             "img_dir": "coco/train2014",
             "ann_file": "coco/annotations/person_keypoints_train2014.json",
