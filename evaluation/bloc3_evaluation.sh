@@ -11,8 +11,8 @@ MASKRCNN_DIR=$ROOT_DIR/"maskrcnn-benchmark"
 EVAL_DIR=$SECOND_STAGE_CODE/evaluation
 INFERENCE_DIR=$MASKRCNN_DIR/inference/coco_humanware_test
 
-TEST_INSTANCES=$TEST_DIR/instances_test.json
 TEST_DIR=$MASKRCNN_DIR/datasets/test_dir
+TEST_INSTANCES=$TEST_DIR/instances_test.json
 
 SECOND_STAGE_CODE=$ROOT_DIR/b2phut2/code
 BEST_RCNN_MODEL=$ROOT_DIR/saved_models/"r_101_batch_size=2_iter=14400.pth"
