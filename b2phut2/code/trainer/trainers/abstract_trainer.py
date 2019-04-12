@@ -124,11 +124,13 @@ class AbstractTrainer(ABC):
                 time_elapsed // 60, time_elapsed % 60
             )
         )
-        print("Force save after final epoch")
-        model_filename = self.output_dir + "/checkpoint_{}_ep_{}.pth".format(
-            self.stats.valid_best_accuracy, self.epoch
-        )
-        self.save_current_best_model(model_filename, hyper_param_search_state)
+        # manually uncomment in training
+        # comment this out in hyper_param_train
+        # print("Force save after final epoch")
+        # model_filename = self.output_dir + "/checkpoint_{}_ep_{}.pth".format(
+        #     self.stats.valid_best_accuracy, self.epoch
+        # )
+        # self.save_current_best_model(model_filename, hyper_param_search_state)
 
     @classmethod
     @abstractmethod

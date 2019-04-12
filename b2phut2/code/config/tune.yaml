@@ -1,5 +1,5 @@
-CONFIG_NAME: 'RESNET34_TUNE'
-DATASET_NAME: ELEM_AI
+CONFIG_NAME: 'RESNET34'
+DATASET_NAME: TUNE_ELEM_AI
 COMET_ML_UPLOAD: False
 SEED: 23
 
@@ -9,9 +9,9 @@ TRAIN:
   VALID_SPLIT: 0.1 
   TEST_SPLIT: 0.1
   SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
-  BATCH_SIZE: 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
-  NUM_EPOCHS: 50 # minimal number of epoches just to see it's training
-  MAX_PATIENCE: 50 # same as the total epoches for testing purposes
+  BATCH_SIZE: 64 # 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
+  NUM_EPOCHS: 70 # minimal number of epoches just to see it's training
+  MAX_PATIENCE: 50 # less than num_ep
   LR_SCHEDULER_PARAMS:
     MILESTONES: [20,40]
     GAMMA: 0.1
@@ -31,7 +31,7 @@ MODEL:
     MAX_SEQUENCE_LENGTH: 5
     NUM_CLASSES: 10
 HYPER_PARAMS:
-  N_CALLS: 10
+  N_CALLS: 8
   SPACE:
     LR: [0.0001,0.01]
     MOM: [0.90,0.99]
