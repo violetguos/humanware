@@ -12,7 +12,8 @@ from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
 from models.resnet import ResNet34
-from trainer.trainers.base_trainer import BaseTrainer
+# from trainer.trainers.base_trainer import BaseTrainer
+from trainer.trainers.lr_scheduler_trainer import LRSchedulerTrainer
 from utils.dataloader import prepare_dataloaders
 from train import parse_args, load_config, fix_seed
 
@@ -20,7 +21,8 @@ from train import parse_args, load_config, fix_seed
 dir_path = os.path.abspath(os.path.join(os.path.realpath(__file__), "./."))
 sys.path.append(dir_path)
 
-# these functions were written by B2T2 but they defined it in such as way that I can't import them
+# these functions were written by B2T2 but they defined it in such as way that 
+# I can't import them
 # copied and pasted
 
 
@@ -43,9 +45,8 @@ def instantiate_trainer(model, model_optimizer, hyper_params):
     '''
     modify this function if you want to change the trainer
     '''
-    # changed to BaseTrainer for base case testing with integration of bbox
-    # json
-    return BaseTrainer(
+
+    return LRSchedulerTrainer(
         model,
         model_optimizer,
         cfg,

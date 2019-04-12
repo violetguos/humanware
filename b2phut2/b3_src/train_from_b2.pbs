@@ -14,4 +14,4 @@ PATH=$PATH:/opt/software/singularity-3.0/bin/
 cd "${PBS_O_WORKDIR}"
 export PATH=$PATH:/opt/software/singularity-3.0/bin/
 
-s_exec bash -ex train_loader_b2.sh
+s_exec bash -ex train_from_b2.sh
