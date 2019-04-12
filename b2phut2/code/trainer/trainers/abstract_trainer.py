@@ -100,7 +100,6 @@ class AbstractTrainer(ABC):
         """
         self.initialize_cometml_experiment(current_hyper_params)
         print("# Start training #")
-        print("self.epoch", self.epoch)
         since = time.time()
 
         summary_writer = TBSummaryWriter(self.output_dir, current_hyper_params)
@@ -126,8 +125,8 @@ class AbstractTrainer(ABC):
             )
         )
         print("Force save after final epoch")
-        model_filename = self.output_dir + "/checkpoint_{}.pth".format(
-            self.stats.valid_best_accuracy
+        model_filename = self.output_dir + "/checkpoint_{}_ep_{}.pth".format(
+            self.stats.valid_best_accuracy, self.epoch
         )
         self.save_current_best_model(model_filename, hyper_param_search_state)
 
