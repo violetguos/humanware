@@ -63,6 +63,6 @@ check_error "Unable to run maskrcnn on test set"
 python $CURR_DIR/converter.py --bbox-file $BBOX_FILE --instance-file $TEST_INSTANCES --output-file $METADATA_FILENAME
 check_error "Unable to generate metadata file"
 
-## run predictions with bbox.json ##
+## run predictions with on test data with metadata.pkl ##
 cd $SECOND_STAGE_CODE/evaluation 
 python eval.py --dataset_dir=$DATA_DIR --results_dir=$RESULTS_DIR --metadata_filename=$METADATA_FILENAME
