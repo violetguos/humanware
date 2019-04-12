@@ -35,7 +35,7 @@ source activate humanware
 
 ## build maskrcnn-bechnmark ##
 echo "compiling maskrcnn..."
-compile_stm=`cd $MASKRCNN_DIR && python setup.py build develop`
+compile_stm=`cd $MASKRCNN_DIR && python setup.py build develop --user`
 check_error "***** Unable to compile maskrcnn *****"
 
 ## run maskrcnn on test data ##
