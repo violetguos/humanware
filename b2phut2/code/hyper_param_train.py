@@ -61,7 +61,6 @@ if __name__ == '__main__':
         print("\nLoading model from", model_filename.absolute())
         model = torch.load(model_filename, map_location=device)
         hyper_param_search_state = model_dict["hyper_params"]
-        # try to load from block2, need hyperparam tune params dict        
 
     dimensions_dict_as_dimensions_list = utils.dimensions_aslist(cfg.HYPER_PARAMS.SPACE)
     initial_hyper_params = utils.point_aslist(cfg.HYPER_PARAMS.SPACE, cfg.HYPER_PARAMS.INITIAL_VALUES)
