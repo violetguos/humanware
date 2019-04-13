@@ -78,7 +78,7 @@ class AbstractTrainer(ABC):
         ):
             # Create an experiment
             self.comet_ml_experiment = Experiment(
-                api_key="Ts8wMpv9UACikZG6a4O1lJHs5",
+                api_key=os.environ["COMET_API_KEY"],
                 project_name="general",
                 workspace="proguoram",
             )
@@ -98,15 +98,13 @@ class AbstractTrainer(ABC):
         Each train/val/test may differe for each model
         I/O is the same, so wrap them with this method and do logging
         """
-        # FIXME: disable comet for now
-        # self.initialize_cometml_experiment(current_hyper_params)
+        self.initialize_cometml_experiment(current_hyper_params)
         print("# Start training #")
         since = time.time()
 
         summary_writer = TBSummaryWriter(self.output_dir, current_hyper_params)
 
         for epoch in range(self.epoch, self.cfg.TRAIN.NUM_EPOCHS, 1):
-            # TODO: Add support for loading checkpoint models...
             self.train(current_hyper_params)
             self.validate(self.model)
             self.epoch = epoch
@@ -126,6 +124,13 @@ class AbstractTrainer(ABC):
                 time_elapsed // 60, time_elapsed % 60
             )
         )
+        # manually uncomment in training
+        # comment this out in hyper_param_train
+        # print("Force save after final epoch")
+        # model_filename = self.output_dir + "/checkpoint_{}_ep_{}.pth".format(
+        #     self.stats.valid_best_accuracy, self.epoch
+        # )
+        # self.save_current_best_model(model_filename, hyper_param_search_state)
 
     @classmethod
     @abstractmethod

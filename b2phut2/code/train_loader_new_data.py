@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-# Import comet_ml in the top of your file
-
 import os
 
 import sys
@@ -14,7 +12,8 @@ from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
 from models.resnet import ResNet34
-from trainer.trainers.base_trainer import BaseTrainer
+# from trainer.trainers.base_trainer import BaseTrainer
+from trainer.trainers.lr_scheduler_trainer import LRSchedulerTrainer
 from utils.dataloader import prepare_dataloaders
 from train import parse_args, load_config, fix_seed
 
@@ -22,7 +21,8 @@ from train import parse_args, load_config, fix_seed
 dir_path = os.path.abspath(os.path.join(os.path.realpath(__file__), "./."))
 sys.path.append(dir_path)
 
-# these functions were written by B2T2 but they defined it in such as way that I can't import them
+# these functions were written by B2T2 but they defined it in such as way that 
+# I can't import them
 # copied and pasted
 
 
@@ -45,9 +45,8 @@ def instantiate_trainer(model, model_optimizer, hyper_params):
     '''
     modify this function if you want to change the trainer
     '''
-    # changed to BaseTrainer for base case testing with integration of bbox
-    # json
-    return BaseTrainer(
+
+    return LRSchedulerTrainer(
         model,
         model_optimizer,
         cfg,
@@ -101,7 +100,6 @@ if __name__ == "__main__":
         num_worker=cfg.TRAIN.NUM_WORKER,
     )
     print("Start training from ", cfg.INPUT_DIR)
-    # print("valid loader", next(iter(valid_loader)))
 
     current_hyper_params_dict = (
         cfg.HYPER_PARAMS.INITIAL_VALUES
@@ -115,4 +113,12 @@ if __name__ == "__main__":
         model, model_optimizer, current_hyper_params_dict
     )
 
+    if model_dict is not None:
+        model.load_state_dict(model_dict["model_state_dict"])
+        model_optimizer.load_state_dict(model_dict["optimizer_state_dict"])
+        current_trainer.load_state_dict(model_dict)
+
+    # begin hack for supporting checkpoint model re-load and retrain
+    if args.model is not None:
+        current_trainer.epoch = 0  # reset to retrain from a checkpoint
     current_trainer.fit(current_hyper_params_dict)

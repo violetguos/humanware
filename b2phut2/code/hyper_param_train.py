@@ -36,6 +36,8 @@ if __name__ == '__main__':
     if args.model is not None:
         model_dict = torch.load(args.model, map_location=device)
         seed = model_dict["seed"]
+        # print("try to load from block2, need hyperparam tune params dict")
+        # print("model_dict", model_dict)
     fix_seed(seed)
 
     # Prepare data
@@ -58,7 +60,9 @@ if __name__ == '__main__':
         model_filename = Path(args.model)
         print("\nLoading model from", model_filename.absolute())
         model = torch.load(model_filename, map_location=device)
-        hyper_param_search_state = model_dict["hyper_param_search_state"]
+        hyper_param_search_state = model_dict["hyper_params"]
+        # try to load from block2, need hyperparam tune params dict
+        # hyper_param_search_state = model_dict["hyper_param_search_state"]
 
     dimensions_dict_as_dimensions_list = utils.dimensions_aslist(cfg.HYPER_PARAMS.SPACE)
     initial_hyper_params = utils.point_aslist(cfg.HYPER_PARAMS.SPACE, cfg.HYPER_PARAMS.INITIAL_VALUES)

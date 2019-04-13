@@ -78,7 +78,9 @@ class HyperParamsSearcher:
             self.current_trainer.load_state_dict(self.state_dict)
 
         self.current_trainer.fit(current_hyper_params_dict, hyper_param_state)
-        return self.current_trainer.stats.valid_best_accuracy.item()
+        # ! type error from origanl code
+        # return self.current_trainer.stats.valid_best_accuracy.item()
+        return self.current_trainer.stats.valid_best_accuracy
 
     def search(self, initial_hyper_params=None):
         """
@@ -102,6 +104,7 @@ class HyperParamsSearcher:
             print("Current hyper-parameters : {}".format(current_hyper_params_dict))
             hyper_param_state = self.get_state_dict(i)
             f_val = self._objective(current_hyper_params_dict, hyper_param_state)
+            print("f_val", f_val)
             self.minimizer.tell(current_hyper_params_list, f_val)
             print("Score = {}".format(f_val))
             if self.best_score < f_val:
