@@ -78,7 +78,7 @@ def eval_model(dataset_dir, metadata_filename, model_filename,
 
     # TODO: MODIFIY THIS!!
     cfg_from_file(
-        "../../model/config.yml")
+        "../../../saved_models/ELEM_AI_b2_base_trainer_PR7/config.yml")
 
     # Load best model
     model_dict = torch.load(model_filename, map_location=device)
@@ -144,10 +144,10 @@ if __name__ == "__main__":
     #########################################
     # MODIFY THIS SECTION #
     # Put your group name here
-    group_name = "b2phut2"
+    group_name = "b2phut3"
 
     # TODO: MODIFY THIS!!!
-    model_filename = '../../model/best_model.pth'
+    model_filename = '../../../saved_models/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth'
     # model_filename should be the absolute path on shared disk to your
     # best model. You need to ensure that they are available to evaluators on
     # Helios.
