@@ -15,4 +15,4 @@ source /rap/jvb-000-aa/COURS2019/etudiants/common.env
 
 PYTHONPATH=$B2_ROOT_DIR python -u $B2_ROOT_DIR/hyper_param_train.py \
     --dataset_dir=$DATA_DIR --metadata_filename=$METADATA_FILENAME \
-    --results_dir=$HOME/humanware/results --cfg=$B2_ROOT_DIR/config/tune.yaml \
+    --results_dir=$HOME/humanware/results --cfg=$B2_ROOT_DIR/config/tune.yaml
