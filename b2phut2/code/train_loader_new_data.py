@@ -1,11 +1,7 @@
 from __future__ import print_function
-
 import os
-
 import sys
 from utils.config import cfg
-
-
 import torch
 
 from models.modular.classifiers.length_classifier import LengthClassifier
