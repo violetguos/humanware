@@ -199,7 +199,8 @@ class AbstractTrainer(ABC):
         :param digits_labels: length labels tensor (N x 1)
         :return: loss tensor value
         """
-        loss = torch.nn.functional.cross_entropy(length_logits, length_labels)
+        loss = torch.nn.functional.cross_entropy(
+            length_logits, length_labels - 3)
         for i in range(digits_labels.shape[1]):
             loss = loss + torch.nn.functional.cross_entropy(
                 digits_logits[i], digits_labels[:, i], ignore_index=-1

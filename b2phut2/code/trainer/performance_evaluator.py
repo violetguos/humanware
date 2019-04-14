@@ -48,7 +48,7 @@ class PerformanceEvaluator(object):
                 digits_target = targets[:, 1:].long().to(device)
 
                 length_logits, digits_logits = model(inputs)
-                length_predictions = length_logits.max(1)[1]
+                length_predictions = length_logits.max(1)[1] + 3
                 digits_predictions = [
                     digit_logits.max(1)[1] for digit_logits in digits_logits
                 ]
