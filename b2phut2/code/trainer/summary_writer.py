@@ -18,8 +18,8 @@ class TBSummaryWriter:
         """
         output_dir = Path(output_dir)
         now = datetime.datetime.now(dateutil.tz.tzlocal())
-        timestamp = now.strftime('%Y_%m_%d_%H_%M_%S')
-        self.log_path = str(output_dir / 'summary' / ('_%s' % (timestamp)))
+        timestamp = now.strftime("%Y_%m_%d_%H_%M_%S")
+        self.log_path = str(output_dir / "summary" / ("_%s" % (timestamp)))
         self.writer = SummaryWriter(self.log_path)
         self.output_dir = output_dir
         self.add_hyper_params(current_hyper_params)
@@ -57,14 +57,27 @@ class TBSummaryWriter:
         :param stats: StatsRecorder object
         :param epoch: current epoch
         """
-        self.add_scalars('Loss', {'Train loss': stats.train_loss_history[-1], 'Valid loss': stats.valid_losses[-1]},
-                         epoch)
-        self.add_scalar('Valid Accuracy', stats.valid_accuracies[-1], epoch)
-        self.add_scalar('Length Accuracy', stats.length_accuracy[-1], epoch)
-        self.add_scalars('Digits Accuracy',
-                         {'digit 0': stats.digits_accuracy[-1][0], 'digit 1': stats.digits_accuracy[-1][1],
-                          'digit 2': stats.digits_accuracy[-1][2],
-                          'digit 3': stats.digits_accuracy[-1][3], 'digit 4': stats.digits_accuracy[-1][4]}, epoch)
+        self.add_scalars(
+            "Loss",
+            {
+                "Train loss": stats.train_loss_history[-1],
+                "Valid loss": stats.valid_losses[-1],
+            },
+            epoch,
+        )
+        self.add_scalar("Valid Accuracy", stats.valid_accuracies[-1], epoch)
+        self.add_scalar("Length Accuracy", stats.length_accuracy[-1], epoch)
+        self.add_scalars(
+            "Digits Accuracy",
+            {
+                "digit 0": stats.digits_accuracy[-1][0],
+                "digit 1": stats.digits_accuracy[-1][1],
+                "digit 2": stats.digits_accuracy[-1][2],
+                "digit 3": stats.digits_accuracy[-1][3],
+                "digit 4": stats.digits_accuracy[-1][4],
+            },
+            epoch,
+        )
 
     def plot_curves(self, data_dict, title, axis_labels):
         """
@@ -76,10 +89,10 @@ class TBSummaryWriter:
         """
         for label in data_dict:
             plt.plot(data_dict[label], label=label)
-        plt.xlabel(axis_labels['x'])
-        plt.ylabel(axis_labels['y'])
+        plt.xlabel(axis_labels["x"])
+        plt.ylabel(axis_labels["y"])
         plt.legend()
         # replace blank spaces in the file names, useful for latex
         title.replace(" ", "_")
-        plt.savefig(self.log_path + title + '.png')
+        plt.savefig(self.log_path + title + ".png")
         self.writer.add_figure(title, plt.gcf(), close=True)

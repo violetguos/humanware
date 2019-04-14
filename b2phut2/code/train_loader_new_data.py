@@ -18,9 +18,9 @@ sys.path.append(dir_path)
 
 
 def instantiate_model(hyper_params):
-    '''
+    """
     modify this function if you want to change the model
-    '''
+    """
     return ModularSVNHClassifier(
         cfg.MODEL,
         feature_transformation=ResNet50(hyper_params["FEATURES_OUTPUT_SIZE"]),
@@ -33,9 +33,9 @@ def instantiate_model(hyper_params):
 
 
 def instantiate_trainer(model, model_optimizer, hyper_params):
-    '''
+    """
     modify this function if you want to change the trainer
-    '''
+    """
 
     return LRSchedulerTrainer(
         model,

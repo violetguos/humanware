@@ -7,8 +7,14 @@ class ModularSVNHClassifier(nn.Module):
     classification task
     """
 
-    def __init__(self, model_config, feature_transformation: nn.Module, length_classifier: nn.Module,
-                 number_classifier: nn.Module, hyper_params=None):
+    def __init__(
+        self,
+        model_config,
+        feature_transformation: nn.Module,
+        length_classifier: nn.Module,
+        number_classifier: nn.Module,
+        hyper_params=None,
+    ):
         """
           :param model_config: model config (see config file)
           :param feature_transformation: feature transformation model (see train.py for an example)
@@ -22,8 +28,15 @@ class ModularSVNHClassifier(nn.Module):
         self.length_classifier = length_classifier
 
         self.number_classifiers = nn.ModuleList(
-            [number_classifier(model_config, hyper_params["FEATURES_OUTPUT_SIZE"]) for _ in
-             range(model_config.NUMBER_CLASSIFIER.MAX_SEQUENCE_LENGTH)])
+            [
+                number_classifier(
+                    model_config, hyper_params["FEATURES_OUTPUT_SIZE"]
+                )
+                for _ in range(
+                    model_config.NUMBER_CLASSIFIER.MAX_SEQUENCE_LENGTH
+                )
+            ]
+        )
 
     def forward(self, x):
         out = self.feature_transformation(x)

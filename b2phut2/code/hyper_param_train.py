@@ -18,10 +18,10 @@ from trainer.trainers.base_trainer import BaseTrainer
 from utils.config import cfg
 from utils.dataloader import prepare_dataloaders
 
-dir_path = (os.path.abspath(os.path.join(os.path.realpath(__file__), './.')))
+dir_path = os.path.abspath(os.path.join(os.path.realpath(__file__), "./."))
 sys.path.append(dir_path)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_args()
     print("pytorch version {}".format(torch.__version__))
     # Load the config file
@@ -39,9 +39,7 @@ if __name__ == '__main__':
     fix_seed(seed)
 
     # Prepare data
-    (train_loader,
-     valid_loader,
-     test_from_train_loader) = prepare_dataloaders(
+    (train_loader, valid_loader, test_from_train_loader) = prepare_dataloaders(
         dataset_split=cfg.TRAIN.DATASET_SPLIT,
         dataset_path=cfg.INPUT_DIR,
         metadata_filename=cfg.METADATA_FILENAME,
@@ -51,7 +49,8 @@ if __name__ == '__main__':
         test_split=cfg.TRAIN.TEST_SPLIT,
         extra_metadata_filename=args.extra_metadata_filename,
         extra_dataset_dir=args.extra_dataset_dir,
-        num_worker=cfg.TRAIN.NUM_WORKER)
+        num_worker=cfg.TRAIN.NUM_WORKER,
+    )
 
     hyper_param_search_state = None
     if args.model is not None:
@@ -60,38 +59,63 @@ if __name__ == '__main__':
         model = torch.load(model_filename, map_location=device)
         hyper_param_search_state = model_dict["hyper_params"]
 
-    dimensions_dict_as_dimensions_list = utils.dimensions_aslist(cfg.HYPER_PARAMS.SPACE)
-    initial_hyper_params = utils.point_aslist(cfg.HYPER_PARAMS.SPACE, cfg.HYPER_PARAMS.INITIAL_VALUES)
+    dimensions_dict_as_dimensions_list = utils.dimensions_aslist(
+        cfg.HYPER_PARAMS.SPACE
+    )
+    initial_hyper_params = utils.point_aslist(
+        cfg.HYPER_PARAMS.SPACE, cfg.HYPER_PARAMS.INITIAL_VALUES
+    )
 
-    hyperparam_optimizer = Optimizer(dimensions_dict_as_dimensions_list, "GP", acq_optimizer="auto")
+    hyperparam_optimizer = Optimizer(
+        dimensions_dict_as_dimensions_list, "GP", acq_optimizer="auto"
+    )
 
     # modify this function if you want to change the model
     def instantiate_model(hyper_params):
-        return ModularSVNHClassifier(cfg.MODEL,
-                                     feature_transformation=ResNet34(hyper_params["FEATURES_OUTPUT_SIZE"]),
-                                     length_classifier=LengthClassifier(cfg.MODEL,
-                                                                        hyper_params["FEATURES_OUTPUT_SIZE"]),
-                                     number_classifier=NumberClassifier,
-                                     hyper_params=hyper_params)
+        return ModularSVNHClassifier(
+            cfg.MODEL,
+            feature_transformation=ResNet34(
+                hyper_params["FEATURES_OUTPUT_SIZE"]
+            ),
+            length_classifier=LengthClassifier(
+                cfg.MODEL, hyper_params["FEATURES_OUTPUT_SIZE"]
+            ),
+            number_classifier=NumberClassifier,
+            hyper_params=hyper_params,
+        )
 
     # modify this function if you want to change the trainer
     def instantiate_trainer(model, model_optimizer, hyper_params):
-        return BaseTrainer(model, model_optimizer, cfg, train_loader, valid_loader, test_from_train_loader,
-                           device, cfg.OUTPUT_DIR, hyper_params=hyper_params,
-                           max_patience=cfg.TRAIN.MAX_PATIENCE)
+        return BaseTrainer(
+            model,
+            model_optimizer,
+            cfg,
+            train_loader,
+            valid_loader,
+            test_from_train_loader,
+            device,
+            cfg.OUTPUT_DIR,
+            hyper_params=hyper_params,
+            max_patience=cfg.TRAIN.MAX_PATIENCE,
+        )
 
     # modify this function if you want to change the optimizer
     def instantiate_optimizer(model, hyper_params):
-        return torch.optim.SGD(model.parameters(), lr=hyper_params["LR"],
-                               momentum=hyper_params["MOM"],
-                               weight_decay=float(hyper_params["WEIGHT_DECAY"]))
+        return torch.optim.SGD(
+            model.parameters(),
+            lr=hyper_params["LR"],
+            momentum=hyper_params["MOM"],
+            weight_decay=float(hyper_params["WEIGHT_DECAY"]),
+        )
 
-    hyper_param_searcher = HyperParamsSearcher(model_creation_function=instantiate_model,
-                                               trainer_creation_function=instantiate_trainer,
-                                               optimizer_creation_function=instantiate_optimizer,
-                                               minimizer=hyperparam_optimizer,
-                                               n_calls=cfg.HYPER_PARAMS.N_CALLS,
-                                               space=cfg.HYPER_PARAMS.SPACE)
+    hyper_param_searcher = HyperParamsSearcher(
+        model_creation_function=instantiate_model,
+        trainer_creation_function=instantiate_trainer,
+        optimizer_creation_function=instantiate_optimizer,
+        minimizer=hyperparam_optimizer,
+        n_calls=cfg.HYPER_PARAMS.N_CALLS,
+        space=cfg.HYPER_PARAMS.SPACE,
+    )
     if model_dict is not None:
         # load
         hyper_param_searcher.load_state_dict(model_dict)

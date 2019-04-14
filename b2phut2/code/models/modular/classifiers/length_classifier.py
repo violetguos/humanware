@@ -13,8 +13,10 @@ class LengthClassifier(nn.Module):
         """
         super().__init__()
         self.seq_linear = nn.Sequential(
-            nn.Linear(in_features=feature_output_size,
-                      out_features=model_config.LENGTH_CLASSIFIER.NUM_CLASSES),
+            nn.Linear(
+                in_features=feature_output_size,
+                out_features=model_config.LENGTH_CLASSIFIER.NUM_CLASSES,
+            )
         )
 
     def forward(self, x):
