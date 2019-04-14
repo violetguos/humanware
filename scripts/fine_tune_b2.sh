@@ -1,4 +1,4 @@
- #!/bin/bash
+#!/bin/bash
 
 CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT_DIR=`cd $CURR_DIR/../ && pwd`
@@ -12,4 +12,5 @@ source /rap/jvb-000-aa/COURS2019/etudiants/common.env
 
 PYTHONPATH=$B2_ROOT_DIR python -u $B2_ROOT_DIR/train.py \
     --dataset_dir=$DATA_DIR --metadata_filename=$METADATA_FILENAME \
-    --results_dir=$ROOT_DIR/results --cfg=$B2_ROOT_DIR/config/retrain_b2.yaml
+    --results_dir=$ROOT_DIR/results --cfg=$B2_ROOT_DIR/config/fine_tune_b2.yaml \
+    --model=$ROOT_DIR/saved_models/block2_model/best_model.pth
