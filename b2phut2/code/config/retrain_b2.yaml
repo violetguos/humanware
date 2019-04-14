@@ -1,7 +1,7 @@
-CONFIG_NAME: 'RESNET34'
+CONFIG_NAME: 'RESNET50'
 DATASET_NAME: ELEM_AI
 COMET_ML_UPLOAD: False
-SEED: 23
+SEED: 8
 
 # Hyperparameters related to model training
 TRAIN:
@@ -9,11 +9,11 @@ TRAIN:
   VALID_SPLIT: 0.1 
   TEST_SPLIT: 0.1
   SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
-  BATCH_SIZE: 32 # small batch size # resnet18 can handle 350 batches, resnet50 64
-  NUM_EPOCHS: 50 # minimal number of epoches just to see it's training
-  MAX_PATIENCE: 50 # same as the total epoches for testing purposes
+  BATCH_SIZE: 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
+  NUM_EPOCHS: 400 # minimal number of epoches just to see it's training
+  MAX_PATIENCE: 200 # same as the total epoches for testing purposes
   LR_SCHEDULER_PARAMS:
-    MILESTONES: [1,2]
+    MILESTONES: [80,120]
     GAMMA: 0.1
   NUM_WORKER: 0
 MODEL:

@@ -7,7 +7,7 @@ import torch
 from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.resnet import ResNet34
+from models.resnet import ResNet50
 from trainer.trainers.lr_scheduler_trainer import LRSchedulerTrainer
 from utils.dataloader import prepare_dataloaders
 from train import parse_args, load_config, fix_seed
@@ -23,7 +23,7 @@ def instantiate_model(hyper_params):
     '''
     return ModularSVNHClassifier(
         cfg.MODEL,
-        feature_transformation=ResNet34(hyper_params["FEATURES_OUTPUT_SIZE"]),
+        feature_transformation=ResNet50(hyper_params["FEATURES_OUTPUT_SIZE"]),
         length_classifier=LengthClassifier(
             cfg.MODEL, hyper_params["FEATURES_OUTPUT_SIZE"]
         ),
