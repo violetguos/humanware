@@ -1,24 +1,21 @@
-from utils.config import cfg_from_file, cfg
-from trainer.stats_recorder import StatsRecorder
-from trainer.performance_evaluator import PerformanceEvaluator
-from models.resnet import ResNet34
-from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.modular.classifiers.number_classifier import NumberClassifier
-from models.modular.classifiers.length_classifier import LengthClassifier
-from utils.dataloader import prepare_dataloaders
 import argparse
+import random
+import sys
+import time
 from pathlib import Path
 
 import numpy as np
 import torch
 
-import time
-
-import random
-
-import sys
-
 sys.path.append("../src")
+from models.modular.classifiers.length_classifier import LengthClassifier
+from models.modular.classifiers.number_classifier import NumberClassifier
+from models.modular.modular_svnh_classifier import ModularSVNHClassifier
+from models.resnet import ResNet34
+from trainer.performance_evaluator import PerformanceEvaluator
+from trainer.stats_recorder import StatsRecorder
+from utils.config import cfg, cfg_from_file
+from utils.dataloader import prepare_dataloaders
 
 
 def eval_model(
