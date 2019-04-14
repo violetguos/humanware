@@ -1,3 +1,11 @@
+from utils.config import cfg_from_file, cfg
+from trainer.stats_recorder import StatsRecorder
+from trainer.performance_evaluator import PerformanceEvaluator
+from models.resnet import ResNet34
+from models.modular.modular_svnh_classifier import ModularSVNHClassifier
+from models.modular.classifiers.number_classifier import NumberClassifier
+from models.modular.classifiers.length_classifier import LengthClassifier
+from utils.dataloader import prepare_dataloaders
 import argparse
 from pathlib import Path
 
@@ -10,15 +18,7 @@ import random
 
 import sys
 
-sys.path.append("../")
-from utils.dataloader import prepare_dataloaders
-from models.modular.classifiers.length_classifier import LengthClassifier
-from models.modular.classifiers.number_classifier import NumberClassifier
-from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.resnet import ResNet34
-from trainer.performance_evaluator import PerformanceEvaluator
-from trainer.stats_recorder import StatsRecorder
-from utils.config import cfg_from_file, cfg
+sys.path.append("../src")
 
 
 def eval_model(
@@ -89,7 +89,7 @@ def eval_model(
 
     # TODO: MODIFIY THIS!!
     cfg_from_file(
-        "../../../saved_models/ELEM_AI_b2_base_trainer_PR7/config.yml"
+        "../saved_models/ELEM_AI_b2_base_trainer_PR7/config.yml"
     )
 
     # Load best model
@@ -166,11 +166,11 @@ if __name__ == "__main__":
     #########################################
     # MODIFY THIS SECTION #
     # Put your group name here
-    group_name = "b2phut3"
+    group_name = "b3phut1"
 
     # TODO: MODIFY THIS!!!
     model_filename = (
-        "../../../saved_models/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth"
+        "../saved_models/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth"
     )
     # model_filename should be the absolute path on shared disk to your
     # best model. You need to ensure that they are available to evaluators on
