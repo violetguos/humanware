@@ -1,0 +1,3 @@
+#!/bin/bash
+
+./helios.pbs fine_tune_b2.sh
