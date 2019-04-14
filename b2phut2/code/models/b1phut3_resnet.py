@@ -9,9 +9,16 @@ class B1phut3Resnet(ResNet):
         """
         :param params: parameters from the config file
         """
-        assert params.FEATURES_EXTRACTION.BLOCK in ['basic', 'bottleneck'], "The desired block does not exist"
-        if params.FEATURES_EXTRACTION.BLOCK == 'basic':
+        assert params.FEATURES_EXTRACTION.BLOCK in [
+            "basic",
+            "bottleneck",
+        ], "The desired block does not exist"
+        if params.FEATURES_EXTRACTION.BLOCK == "basic":
             block = BasicBlock
         else:
             block = Bottleneck
-        super().__init__(block, params.FEATURES_EXTRACTION.LAYERS, params.FEATURES_EXTRACTION.OUTPUT_SIZE)
+        super().__init__(
+            block,
+            params.FEATURES_EXTRACTION.LAYERS,
+            params.FEATURES_EXTRACTION.OUTPUT_SIZE,
+        )

@@ -6,8 +6,20 @@ class LRSchedulerTrainer(BaseTrainer):
     """
     Trainer with learning rate scheduler
     """
-    def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, device, output_dir, hyper_params,
-                 max_patience):
+
+    def __init__(
+        self,
+        model,
+        optimizer,
+        cfg,
+        train_loader,
+        valid_loader,
+        test_loader,
+        device,
+        output_dir,
+        hyper_params,
+        max_patience,
+    ):
         """
         :param model: pytorch model
         :param optimizer: pytorch optimizaer
@@ -19,12 +31,23 @@ class LRSchedulerTrainer(BaseTrainer):
         :param hyper_params: hyper parameters
         :param max_patience: max number of iteration without seeing improvement in accuracy
         """
-        super(LRSchedulerTrainer, self).__init__(model, optimizer, cfg, train_loader, valid_loader, test_loader, device,
-                                                 output_dir,
-                                                 hyper_params, max_patience)
-        self.lr_scheduler = optim.lr_scheduler.MultiStepLR(optimizer,
-                                                           milestones=cfg.TRAIN.LR_SCHEDULER_PARAMS.MILESTONES,
-                                                           gamma=cfg.TRAIN.LR_SCHEDULER_PARAMS.GAMMA)
+        super(LRSchedulerTrainer, self).__init__(
+            model,
+            optimizer,
+            cfg,
+            train_loader,
+            valid_loader,
+            test_loader,
+            device,
+            output_dir,
+            hyper_params,
+            max_patience,
+        )
+        self.lr_scheduler = optim.lr_scheduler.MultiStepLR(
+            optimizer,
+            milestones=cfg.TRAIN.LR_SCHEDULER_PARAMS.MILESTONES,
+            gamma=cfg.TRAIN.LR_SCHEDULER_PARAMS.GAMMA,
+        )
 
     def train(self, current_hyper_params):
         """

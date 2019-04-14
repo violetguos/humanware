@@ -8,8 +8,19 @@ class PoterhsuTrainer(AbstractTrainer):
      Trainer based on Pterhsu implementation. Github link : https://github.com/potterhsu/SVHNClassifier-PyTorch
      """
 
-    def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, device, output_dir,
-                 hyper_params, max_patience):
+    def __init__(
+        self,
+        model,
+        optimizer,
+        cfg,
+        train_loader,
+        valid_loader,
+        test_loader,
+        device,
+        output_dir,
+        hyper_params,
+        max_patience,
+    ):
         """
         :param model: pytorch model
         :param optimizer: pytorch optimizaer
@@ -21,8 +32,18 @@ class PoterhsuTrainer(AbstractTrainer):
         :param hyper_params: hyper parameters
         :param max_patience: max number of iteration without seeing improvement in accuracy
         """
-        super(PoterhsuTrainer, self).__init__(model, optimizer, cfg, train_loader, valid_loader, test_loader, device,
-                                              output_dir, hyper_params, max_patience)
+        super(PoterhsuTrainer, self).__init__(
+            model,
+            optimizer,
+            cfg,
+            train_loader,
+            valid_loader,
+            test_loader,
+            device,
+            output_dir,
+            hyper_params,
+            max_patience,
+        )
         self.step = 0
 
     def _adjust_learning_rate(self, step, initial_lr, decay_steps, decay_rate):
@@ -36,7 +57,7 @@ class PoterhsuTrainer(AbstractTrainer):
         """
         lr = initial_lr * (decay_rate ** (step // decay_steps))
         for param_group in self.optimizer.param_groups:
-            param_group['lr'] = lr
+            param_group["lr"] = lr
         return lr
 
     def train(self, current_hyper_params):
@@ -52,9 +73,12 @@ class PoterhsuTrainer(AbstractTrainer):
         print("Iterating over training data...")
         for i, batch in enumerate(tqdm(self.train_loader)):
             # Adjust the learning rate
-            lr = self._adjust_learning_rate(step=self.step, initial_lr=current_hyper_params['LR'],
-                                            decay_steps=current_hyper_params['DECAY_STEPS'],
-                                            decay_rate=current_hyper_params['DECAY_RATE'])
+            lr = self._adjust_learning_rate(
+                step=self.step,
+                initial_lr=current_hyper_params["LR"],
+                decay_steps=current_hyper_params["DECAY_STEPS"],
+                decay_rate=current_hyper_params["DECAY_RATE"],
+            )
             loss = self._train_batch(batch)
             # Statistics
             train_loss += loss.item()

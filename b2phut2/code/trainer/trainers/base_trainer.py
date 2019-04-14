@@ -8,8 +8,19 @@ class BaseTrainer(AbstractTrainer):
     BaseTrainer class that fits the given model
     """
 
-    def __init__(self, model, optimizer, cfg, train_loader, valid_loader, test_loader, device, output_dir, hyper_params,
-                 max_patience):
+    def __init__(
+        self,
+        model,
+        optimizer,
+        cfg,
+        train_loader,
+        valid_loader,
+        test_loader,
+        device,
+        output_dir,
+        hyper_params,
+        max_patience,
+    ):
         """
         :param model: pytorch model
         :param optimizer: pytorch optimizaer
@@ -21,9 +32,18 @@ class BaseTrainer(AbstractTrainer):
         :param hyper_params: hyper parameters
         :param max_patience: max number of iteration without seeing improvement in accuracy
         """
-        super(BaseTrainer, self).__init__(model, optimizer, cfg, train_loader, valid_loader, test_loader, device,
-                                          output_dir,
-                                          hyper_params, max_patience)
+        super(BaseTrainer, self).__init__(
+            model,
+            optimizer,
+            cfg,
+            train_loader,
+            valid_loader,
+            test_loader,
+            device,
+            output_dir,
+            hyper_params,
+            max_patience,
+        )
 
     def train(self, current_hyper_params):
         """

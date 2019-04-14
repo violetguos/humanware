@@ -3,9 +3,8 @@ import torch.nn.functional as f
 
 
 class ConvNet(nn.Module):
-
     def __init__(self, num_classes=2):
-        '''
+        """
         Convolutional Neural Network.
 
         Parameters
@@ -13,7 +12,7 @@ class ConvNet(nn.Module):
         num_classes : int
             Number of classes for the output of the network.
 
-        '''
+        """
 
         super(ConvNet, self).__init__()
 
@@ -21,24 +20,27 @@ class ConvNet(nn.Module):
             nn.Conv2d(3, 32, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(32),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
 
         self.layer2 = nn.Sequential(
             nn.Conv2d(32, 64, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(64),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
 
         self.layer3 = nn.Sequential(
             nn.Conv2d(64, 128, kernel_size=5, stride=1, padding=2),
             nn.BatchNorm2d(128),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2))
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
 
         self.fc = nn.Linear(4608, num_classes)
 
     def forward(self, x):
-        '''
+        """
         Forward path.
 
         Parameters
@@ -51,7 +53,7 @@ class ConvNet(nn.Module):
         x : ndarray
             Output to the network.
 
-        '''
+        """
         out = self.layer1(x)
         out = self.layer2(out)
         out = self.layer3(out)
@@ -62,11 +64,10 @@ class ConvNet(nn.Module):
 
 
 class BaselineCNN(nn.Module):  # Achieves ~91%
-
     def __init__(self, num_classes):
-        '''
+        """
         Placeholder CNN
-        '''
+        """
         super(BaselineCNN, self).__init__()
 
         self.conv1 = nn.Conv2d(3, 32, 5)
@@ -78,7 +79,7 @@ class BaselineCNN(nn.Module):  # Achieves ~91%
         self.fc2 = nn.Linear(4096, num_classes)
 
     def forward(self, x):
-        '''
+        """
         Forward path.
 
         Parameters
@@ -91,7 +92,7 @@ class BaselineCNN(nn.Module):  # Achieves ~91%
         x : ndarray
             Output to the network.
 
-        '''
+        """
 
         x = self.pool(f.relu(self.conv1(x)))
         x = self.pool(f.relu(self.conv2(x)))
@@ -105,11 +106,10 @@ class BaselineCNN(nn.Module):  # Achieves ~91%
 
 
 class BaselineCNNDropout(nn.Module):
-
     def __init__(self, num_classes, p=0.5):
-        '''
+        """
         Placeholder CNN
-        '''
+        """
         super(BaselineCNNDropout, self).__init__()
 
         self.p = p
@@ -123,7 +123,7 @@ class BaselineCNNDropout(nn.Module):
         self.fc2 = nn.Linear(4096, num_classes)
 
     def forward(self, x):
-        '''
+        """
         Forward path.
 
         Parameters
@@ -136,7 +136,7 @@ class BaselineCNNDropout(nn.Module):
         x : ndarray
             Output to the network.
 
-        '''
+        """
 
         x = self.pool(f.relu(self.conv1(x)))
         x = self.dropout(x)

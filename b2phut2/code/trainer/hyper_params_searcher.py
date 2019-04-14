@@ -13,8 +13,15 @@ class HyperParamsSearcher:
     Class that can do various type of hyperparameter search (Bayesian for example) based on the skopt library
     """
 
-    def __init__(self, model_creation_function, trainer_creation_function, optimizer_creation_function, minimizer,
-                 n_calls, space):
+    def __init__(
+        self,
+        model_creation_function,
+        trainer_creation_function,
+        optimizer_creation_function,
+        minimizer,
+        n_calls,
+        space,
+    ):
         """
         :param model_creation_function: pointer to the model instancing function
         :param trainer_creation_function: pointer to the trainer instancing function
@@ -42,9 +49,13 @@ class HyperParamsSearcher:
         """
         self.state_dict = state_dict
         self.has_loaded_state = True
-        self.start_iteration = state_dict["hyper_param_search_state"]["current_iteration"]
+        self.start_iteration = state_dict["hyper_param_search_state"][
+            "current_iteration"
+        ]
         self.minimizer = state_dict["hyper_param_search_state"]["minimizer"]
-        self.best_score = state_dict["hyper_param_search_state"]["best_score_overall"]
+        self.best_score = state_dict["hyper_param_search_state"][
+            "best_score_overall"
+        ]
 
     def get_state_dict(self, current_iteration):
         """
@@ -55,7 +66,7 @@ class HyperParamsSearcher:
         return {
             "current_iteration": current_iteration,
             "minimizer": self.minimizer,
-            "best_score_overall": self.best_score
+            "best_score_overall": self.best_score,
         }
 
     def _objective(self, current_hyper_params_dict, hyper_param_state):
@@ -67,14 +78,20 @@ class HyperParamsSearcher:
         """
         model = self.model_creation_lambda(current_hyper_params_dict)
 
-        model_optimizer = self.optimizer_creation_lambda(model, current_hyper_params_dict)
+        model_optimizer = self.optimizer_creation_lambda(
+            model, current_hyper_params_dict
+        )
 
-        self.current_trainer = self.trainer_creation_lambda(model, model_optimizer, current_hyper_params_dict)
+        self.current_trainer = self.trainer_creation_lambda(
+            model, model_optimizer, current_hyper_params_dict
+        )
         if self.has_loaded_state is True:
             self.has_loaded_state = False
             # We continue the previous iteration
             model.load_state_dict(self.state_dict["model_state_dict"])
-            model_optimizer.load_state_dict(self.state_dict["optimizer_state_dict"])
+            model_optimizer.load_state_dict(
+                self.state_dict["optimizer_state_dict"]
+            )
             self.current_trainer.load_state_dict(self.state_dict)
 
         self.current_trainer.fit(current_hyper_params_dict, hyper_param_state)
@@ -92,18 +109,30 @@ class HyperParamsSearcher:
             if i == 0 and initial_hyper_params is not None:
                 # We use the init values for the parameter list
                 current_hyper_params_list = initial_hyper_params
-                current_hyper_params_dict = skopt.utils.point_asdict(self.search_space, current_hyper_params_list)
+                current_hyper_params_dict = skopt.utils.point_asdict(
+                    self.search_space, current_hyper_params_list
+                )
             else:
                 if self.has_loaded_state is True:
                     current_hyper_params_dict = self.state_dict["hyper_params"]
-                    current_hyper_params_list = skopt.utils.point_aslist(self.search_space, current_hyper_params_dict)
+                    current_hyper_params_list = skopt.utils.point_aslist(
+                        self.search_space, current_hyper_params_dict
+                    )
                 else:
                     current_hyper_params_list = self.minimizer.ask()
-                    current_hyper_params_dict = skopt.utils.point_asdict(self.search_space, current_hyper_params_list)
+                    current_hyper_params_dict = skopt.utils.point_asdict(
+                        self.search_space, current_hyper_params_list
+                    )
 
-            print("Current hyper-parameters : {}".format(current_hyper_params_dict))
+            print(
+                "Current hyper-parameters : {}".format(
+                    current_hyper_params_dict
+                )
+            )
             hyper_param_state = self.get_state_dict(i)
-            f_val = self._objective(current_hyper_params_dict, hyper_param_state)
+            f_val = self._objective(
+                current_hyper_params_dict, hyper_param_state
+            )
             print("f_val", f_val)
             self.minimizer.tell(current_hyper_params_list, f_val)
             print("Score = {}".format(f_val))
@@ -116,20 +145,32 @@ class HyperParamsSearcher:
             torch.cuda.empty_cache()
             dump_tensors()
 
-        print("The hyper-paramaters search has correctly ended with a best valid score of {}".format(self.best_score))
+        print(
+            "The hyper-paramaters search has correctly ended with a best valid score of {}".format(
+                self.best_score
+            )
+        )
 
     def save_overall_current_best_model(self, current_hyper_params_dict):
         """
         Saves the overall best model so far
         :param current_hyper_params_dict: current hyper parameters dictionary
         """
-        print('Saving model ...')
-        model_filename = os.path.join(self.current_trainer.output_dir, 'best_model_{}.pth'.format(self.best_score))
+        print("Saving model ...")
+        model_filename = os.path.join(
+            self.current_trainer.output_dir,
+            "best_model_{}.pth".format(self.best_score),
+        )
         self.current_trainer.save_current_best_model(model_filename)
-        print('Best model saved to :', model_filename)
+        print("Best model saved to :", model_filename)
 
         # Saving best hyper-params
-        with open(os.path.join(self.current_trainer.output_dir, 'best_hyper_params.json'), 'w') as fp:
+        with open(
+            os.path.join(
+                self.current_trainer.output_dir, "best_hyper_params.json"
+            ),
+            "w",
+        ) as fp:
             if current_hyper_params_dict is not None:
                 for key, value in current_hyper_params_dict.items():
                     # We need to convert to native because the json package doesnt support numpy types

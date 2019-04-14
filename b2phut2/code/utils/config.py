@@ -8,13 +8,13 @@ import numpy as np
 __C = edict()
 cfg = __C
 
-__C.CONFIG_NAME = 'ConNet'
-__C.DATASET_NAME = 'SVHN'
+__C.CONFIG_NAME = "ConNet"
+__C.DATASET_NAME = "SVHN"
 __C.SEED = 1234
 
 # Training options
 __C.TRAIN = edict()
-__C.TRAIN.DATASET_SPLIT = 'train'
+__C.TRAIN.DATASET_SPLIT = "train"
 __C.TRAIN.VALID_SPLIT = 0.8
 __C.TRAIN.SAMPLE_SIZE = 100
 __C.TRAIN.BATCH_SIZE = 32
@@ -24,7 +24,7 @@ __C.TRAIN.MOM = 0.9
 
 
 def _merge_a_into_b(a, b):
-    '''
+    """
     Merge config dictionary a into config dictionary b, clobbering the
     options in b whenever they are also specified in a.
 
@@ -35,7 +35,7 @@ def _merge_a_into_b(a, b):
     b : dict
         Config dictionary b.
 
-    '''
+    """
     if type(a) is not edict:
         return
 
@@ -52,23 +52,25 @@ def _merge_a_into_b(a, b):
                 if isinstance(b[k], np.ndarray):
                     v = np.array(v, dtype=b[k].dtype)
                 else:
-                    raise ValueError(('Type mismatch ({} vs. {}) '
-                                      'for config key: {}').format(type(b[k]),
-                                                                   type(v), k))
+                    raise ValueError(
+                        (
+                            "Type mismatch ({} vs. {}) " "for config key: {}"
+                        ).format(type(b[k]), type(v), k)
+                    )
 
             # recursively merge dicts
             if type(v) is edict:
                 try:
                     _merge_a_into_b(a[k], b[k])
                 except Exception as e:
-                    print('Error under config key: {}'.format(k))
+                    print("Error under config key: {}".format(k))
                     raise e
             else:
                 b[k] = v
 
 
 def cfg_from_file(filename):
-    '''
+    """
     Load a config file and merge it into the default options.
 
     Parameters
@@ -76,9 +78,10 @@ def cfg_from_file(filename):
     filename : string
         Path to filename.
 
-    '''
+    """
     import yaml
-    with open(filename, 'r') as f:
+
+    with open(filename, "r") as f:
         yaml_cfg = edict(yaml.load(f))
 
     _merge_a_into_b(yaml_cfg, __C)
