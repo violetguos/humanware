@@ -64,7 +64,7 @@ class PerformanceEvaluator(object):
                     )
 
                 loss = torch.nn.functional.cross_entropy(
-                    length_logits, length_target
+                    length_logits, length_target - 3
                 )
                 # We then check the digits output
                 for i in range(digits_target.shape[1]):
