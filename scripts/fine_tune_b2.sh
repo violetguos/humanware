@@ -6,7 +6,7 @@ ROOT_DIR=`cd $CURR_DIR/../ && pwd`
 B2_ROOT_DIR=$ROOT_DIR/src
 SVHN_DIR='/rap/jvb-000-aa/COURS2019/etudiants/data/humanware/Humanware_v1_1553272293'
 DATA_DIR=$SVHN_DIR/train
-METADATA_FILENAME=$SVHN_DIR/'avenue_train_metadata_split.pkl'
+METADATA_FILENAME=$DATA_DIR/'avenue_train_metadata_split.pkl'
 
 source /rap/jvb-000-aa/COURS2019/etudiants/common.env
 
