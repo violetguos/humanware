@@ -18,7 +18,7 @@ TRAIN:
   NUM_WORKER: 0
 MODEL:
   FEATURES_EXTRACTION:
-    BLOCK: "basic"
+    BLOCK: "bottleneck"
     LAYERS: [
       3,
       4,
