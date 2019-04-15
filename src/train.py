@@ -48,7 +48,7 @@ def instantiate_trainer(model, model_optimizer, hyper_params):
         cfg,
         train_loader,
         valid_loader,
-        test_from_train_loader,
+        None,
         device,
         cfg.OUTPUT_DIR,
         hyper_params=hyper_params,
@@ -109,17 +109,18 @@ def parse_args():
                                 training""",
     )
     parser.add_argument(
-        "--extra_metadata_filename",
+        "--valid_metadata_filename",
         type=str,
+        required=True,
         help="""metadata_filename will be the absolute
                                 path to the directory to be used for
                                 training.""",
     )
 
     parser.add_argument(
-        "--extra_dataset_dir",
+        "--valid_dataset_dir",
         type=str,
-        default="data/SVHN/extra/",
+        required=True,
         help="""dataset_dir will be the absolute path
                                 to the directory to be used for
                                 training""",
@@ -208,7 +209,7 @@ if __name__ == "__main__":
     fix_seed(seed)
 
     # Prepare data
-    (train_loader, valid_loader, test_from_train_loader) = prepare_dataloaders(
+    (train_loader, valid_loader) = prepare_dataloaders(
         dataset_split=cfg.TRAIN.DATASET_SPLIT,
         dataset_path=cfg.INPUT_DIR,
         metadata_filename=cfg.METADATA_FILENAME,
@@ -216,8 +217,8 @@ if __name__ == "__main__":
         sample_size=cfg.TRAIN.SAMPLE_SIZE,
         valid_split=cfg.TRAIN.VALID_SPLIT,
         test_split=cfg.TRAIN.TEST_SPLIT,
-        extra_metadata_filename=args.extra_metadata_filename,
-        extra_dataset_dir=args.extra_dataset_dir,
+        valid_metadata_filename=args.valid_metadata_filename,
+        valid_dataset_dir=args.valid_dataset_dir,
         num_worker=cfg.TRAIN.NUM_WORKER,
     )
     print("Start training from ", cfg.INPUT_DIR)
