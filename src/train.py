@@ -6,7 +6,6 @@ import os
 import pprint
 import random
 import sys
-from pathlib import Path
 from shutil import copyfile
 
 import dateutil.tz
