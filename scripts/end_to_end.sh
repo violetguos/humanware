@@ -14,6 +14,7 @@ METADATA_FILENAME=$MODEL_DIR/metadata.pkl
 ELEM_DIR='/rap/jvb-000-aa/COURS2019/etudiants/data/humanware/Humanware_v1_1553272293'
 VALID_DATA_DIR=$ELEM_DIR/valid
 VALID_INSTANCES=$VALID_DATA_DIR/instances_valid.json
+VALID_METADATA_FILENAME=$VALID_DATA_DIR/'avenue_valid_metadata_split.pkl'
 
 SAVED_MODELS=$ROOT_DIR/saved_models
 SECOND_STAGE_MODEL=$SAVED_MODELS/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth
@@ -28,7 +29,11 @@ function check_error(){
 }
 
 ## convert bbox.json to metadata.pkl ##
-python $EVAL_DIR/converter.py --bbox-file $BBOX_FILE --instance-file $VALID_INSTANCES --output-file $METADATA_FILENAME
+python $EVAL_DIR/converter.py \
+    --bbox-file $BBOX_FILE \
+    --instance-file $VALID_INSTANCES \
+    --output-file $METADATA_FILENAME \
+    --original-metadata $VALID_METADATA_FILENAME
 check_error "Unable to generate metadata file"
 
 ## run eval ##
