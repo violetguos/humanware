@@ -7,12 +7,7 @@ import numpy as np
 import torch
 
 from torchvision import transforms
-from torch.utils.data import (
-    DataLoader,
-    ConcatDataset,
-    Subset,
-    # SubsetRandomSampler,
-)
+from torch.utils.data import DataLoader
 
 from utils.transforms import FirstCrop, Rescale, RandomCrop, ToTensor
 from utils.misc import load_obj
