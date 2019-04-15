@@ -1,3 +1,11 @@
+from utils.dataloader import prepare_dataloaders
+from utils.config import cfg, cfg_from_file
+from trainer.stats_recorder import StatsRecorder
+from trainer.performance_evaluator import PerformanceEvaluator
+from models.resnet import ResNet34
+from models.modular.modular_svnh_classifier import ModularSVNHClassifier
+from models.modular.classifiers.number_classifier import NumberClassifier
+from models.modular.classifiers.length_classifier import LengthClassifier
 import argparse
 import random
 import sys
@@ -8,20 +16,13 @@ import numpy as np
 import torch
 
 sys.path.append("../src")
-from models.modular.classifiers.length_classifier import LengthClassifier
-from models.modular.classifiers.number_classifier import NumberClassifier
-from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.resnet import ResNet34
-from trainer.performance_evaluator import PerformanceEvaluator
-from trainer.stats_recorder import StatsRecorder
-from utils.config import cfg, cfg_from_file
-from utils.dataloader import prepare_dataloaders
 
 
 def eval_model(
     dataset_dir,
     metadata_filename,
     model_filename,
+    model_cfg,
     batch_size=32,
     sample_size=-1,
 ):
@@ -63,31 +64,18 @@ def eval_model(
     dataset_split = "test"
     # dataset_split = 'train'
 
-    if dataset_split is "test":
-        test_loader = prepare_dataloaders(
-            dataset_split=dataset_split,
-            dataset_path=dataset_dir,
-            metadata_filename=metadata_filename,
-            batch_size=batch_size,
-            sample_size=sample_size,
-            num_worker=0,
-        )
-    elif dataset_split is "train":
-        train_loader, valid_loader, test_loader = prepare_dataloaders(
-            dataset_split=dataset_split,
-            dataset_path=dataset_dir,
-            metadata_filename=metadata_filename,
-            batch_size=batch_size,
-            sample_size=sample_size,
-            num_worker=0,
-        )
+    test_loader = prepare_dataloaders(
+        dataset_split=dataset_split,
+        dataset_path=dataset_dir,
+        metadata_filename=metadata_filename,
+        batch_size=batch_size,
+        sample_size=sample_size,
+        num_worker=0,
+    )
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("Device used: ", device)
 
-    # TODO: MODIFIY THIS!!
-    cfg_from_file(
-        "../saved_models/ELEM_AI_b2_base_trainer_PR7/config.yml"
-    )
+    cfg_from_file(model_cfg)
 
     # Load best model
     model_dict = torch.load(model_filename, map_location=device)
@@ -155,6 +143,10 @@ if __name__ == "__main__":
     # results_dir will be the absolute path to a directory where the output of
     # your inference will be saved.
 
+    parser.add_argument("--model_path", type=str,
+                        default="../saved_models/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth")
+    parser.add_argument("--model_cfg", type=str,
+                        default="../saved_models/ELEM_AI_b2_base_trainer_PR7/config.yml")
     args = parser.parse_args()
     metadata_filename = args.metadata_filename
     dataset_dir = args.dataset_dir
@@ -165,10 +157,6 @@ if __name__ == "__main__":
     # Put your group name here
     group_name = "b3phut1"
 
-    # TODO: MODIFY THIS!!!
-    model_filename = (
-        "../saved_models/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth"
-    )
     # model_filename should be the absolute path on shared disk to your
     # best model. You need to ensure that they are available to evaluators on
     # Helios.
@@ -177,7 +165,8 @@ if __name__ == "__main__":
 
     # DO NOT MODIFY THIS SECTION #
     print("\nEvaluating results ... ")
-    y_pred = eval_model(dataset_dir, metadata_filename, model_filename)
+    y_pred = eval_model(dataset_dir, metadata_filename,
+                        args.model_path, args.model_cfg)
 
     assert type(y_pred) is np.ndarray, "Return a numpy array of dim=1"
     assert len(y_pred.shape) == 1, "Make sure ndim=1 for y_pred"
