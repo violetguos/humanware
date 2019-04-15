@@ -39,7 +39,7 @@ if __name__ == "__main__":
     fix_seed(seed)
 
     # Prepare data
-    (train_loader, valid_loader, test_from_train_loader) = prepare_dataloaders(
+    (train_loader, valid_loader) = prepare_dataloaders(
         dataset_split=cfg.TRAIN.DATASET_SPLIT,
         dataset_path=cfg.INPUT_DIR,
         metadata_filename=cfg.METADATA_FILENAME,
@@ -92,7 +92,7 @@ if __name__ == "__main__":
             cfg,
             train_loader,
             valid_loader,
-            test_from_train_loader,
+            None,
             device,
             cfg.OUTPUT_DIR,
             hyper_params=hyper_params,
