@@ -53,10 +53,10 @@ def convert(instance_file, bbox_file, output_file, original_metadata=None):
             'filename': instance['file_name'],
             'metadata': {
                 'label': label,
-                'left': [bbox_info[0]]*label_len,
-                'top': [bbox_info[1]]*label_len,
-                'height': [bbox_info[2]]*label_len,
-                'width': [bbox_info[3]]*label_len,
+                'left': [bbox_info[0]] * label_len,
+                'top': [bbox_info[1]] * label_len,
+                'height': [bbox_info[2]] * label_len,
+                'width': [bbox_info[3]] * label_len,
             }
         }
     with open(output_file, 'wb') as fob:

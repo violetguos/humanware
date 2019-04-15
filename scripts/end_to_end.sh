@@ -44,7 +44,3 @@ python eval.py \
     --metadata_filename=$METADATA_FILENAME \
     --model_path=$SECOND_STAGE_MODEL \
     --model_cfg=$SECOND_STAGE_CONFIG
-
-
-
-
