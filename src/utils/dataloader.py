@@ -213,28 +213,28 @@ def prepare_dataloaders(
     if dataset_split in ["train", "extra"]:
 
         # Prepare a train and validation dataloader
-        valid_metadata = load_obj(valid_metadata_filename)
-        valid_dataset = SVHNDataset(
-            valid_metadata,
-            data_dir=valid_dataset_dir,
-            transform=test_transform,
-            normalize_transform=normalize,
-        )
-        train_sampler = torch.utils.data.SubsetRandomSampler(indices)
-        valid_sampler = torch.utils.data.SequentialSampler(indices)
+        valid_loader = None
+        if valid_dataset_dir is not None:
+            valid_metadata = load_obj(valid_metadata_filename)
+            valid_dataset = SVHNDataset(
+                valid_metadata,
+                data_dir=valid_dataset_dir,
+                transform=test_transform,
+                normalize_transform=normalize,
+            )
+            valid_loader = DataLoader(
+                valid_dataset,
+                batch_size=batch_size,
+                shuffle=False,
+                num_workers=num_worker,
+            )
 
+        train_sampler = torch.utils.data.SubsetRandomSampler(indices)
         train_loader = DataLoader(
             dataset,
             batch_size=batch_size,
             shuffle=False,
             sampler=train_sampler,
-            num_workers=num_worker,
-        )
-        valid_loader = DataLoader(
-            valid_dataset,
-            batch_size=batch_size,
-            shuffle=False,
-            sampler=valid_sampler,
             num_workers=num_worker,
         )
 
