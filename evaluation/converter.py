@@ -13,6 +13,9 @@ def convert(instance_file, bbox_file, output_file, original_metadata=None):
         instance_file_data = json.load(fob)
     with open(bbox_file) as fob:
         bbox_file_data = json.load(fob)
+    if original_metadata is not None:
+        with open(original_metadata, 'rb') as fob:
+            original_metadata = pickle.load(fob)
 
     new_bbox_format = {}
     # loop and select the box with most score
