@@ -8,11 +8,14 @@ import json
 import pickle
 
 
-def convert(instance_file, bbox_file, output_file):
+def convert(instance_file, bbox_file, output_file, original_metadata=None):
     with open(instance_file) as fob:
         instance_file_data = json.load(fob)
     with open(bbox_file) as fob:
         bbox_file_data = json.load(fob)
+    if original_metadata is not None:
+        with open(original_metadata, 'rb') as fob:
+            original_metadata = pickle.load(fob)
 
     new_bbox_format = {}
     # loop and select the box with most score
@@ -42,14 +45,18 @@ def convert(instance_file, bbox_file, output_file):
             bbox_info = {
                 'bbox': [372.32, 374.93, 61.69, 62.60]}
         bbox_info = bbox_info['bbox']
+        label = [1]
+        if original_metadata is not None:
+            label = original_metadata[image_id]['metadata']['label']
+        label_len = len(label)
         metadata[image_id] = {
             'filename': instance['file_name'],
             'metadata': {
-                'label': [1],
-                'left': [bbox_info[0]],
-                'top': [bbox_info[1]],
-                'height': [bbox_info[2]],
-                'width': [bbox_info[3]],
+                'label': label,
+                'left': [bbox_info[0]] * label_len,
+                'top': [bbox_info[1]] * label_len,
+                'height': [bbox_info[2]] * label_len,
+                'width': [bbox_info[3]] * label_len,
             }
         }
     with open(output_file, 'wb') as fob:
@@ -76,5 +83,13 @@ if __name__ == '__main__':
         required=True,
         help="Output file path",
     )
+    parser.add_argument(
+        "--original-metadata",
+        type=str,
+        default=None,
+        required=False,
+        help="Supply when testing end-to-end",
+    )
     args = parser.parse_args()
-    convert(args.instance_file, args.bbox_file, args.output_file)
+    convert(args.instance_file, args.bbox_file,
+            args.output_file, args.original_metadata)
