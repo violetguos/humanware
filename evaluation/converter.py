@@ -47,7 +47,7 @@ def convert(instance_file, bbox_file, output_file, original_metadata=None):
         bbox_info = bbox_info['bbox']
         label = [1]
         if original_metadata is not None:
-            label = original_metadata[image_id]['metdata']['label']
+            label = original_metadata[image_id]['metadata']['label']
         label_len = len(label)
         metadata[image_id] = {
             'filename': instance['file_name'],
