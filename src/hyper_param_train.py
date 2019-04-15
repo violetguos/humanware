@@ -47,8 +47,8 @@ if __name__ == "__main__":
         sample_size=cfg.TRAIN.SAMPLE_SIZE,
         valid_split=cfg.TRAIN.VALID_SPLIT,
         test_split=cfg.TRAIN.TEST_SPLIT,
-        extra_metadata_filename=args.extra_metadata_filename,
-        extra_dataset_dir=args.extra_dataset_dir,
+        valid_metadata_filename=args.valid_metadata_filename,
+        valid_dataset_dir=args.valid_dataset_dir,
         num_worker=cfg.TRAIN.NUM_WORKER,
     )
 
