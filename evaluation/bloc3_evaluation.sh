@@ -8,13 +8,11 @@ export LD_LIBRARY_PATH=/cvmfs/soft.computecanada.ca/easybuild/software/2017/avx/
 CURR_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ROOT_DIR=`cd $CURR_DIR/../ && pwd`
 MASKRCNN_DIR=$ROOT_DIR/"maskrcnn-benchmark"
-EVAL_DIR=$SECOND_STAGE_CODE/evaluation
 INFERENCE_DIR=$MASKRCNN_DIR/inference/coco_humanware_test
 
 TEST_DIR=$MASKRCNN_DIR/datasets/test_dir
 TEST_INSTANCES=$TEST_DIR/instances_test.json
 
-SECOND_STAGE_CODE=$ROOT_DIR/b2phut2/code
 BEST_RCNN_MODEL=$ROOT_DIR/saved_models/"r_101_batch_size=2_iter=14400.pth"
 BBOX_FILE=$INFERENCE_DIR/bbox.json
 METADATA_FILENAME=$INFERENCE_DIR/metadata.pkl
@@ -64,5 +62,4 @@ python $CURR_DIR/converter.py --bbox-file $BBOX_FILE --instance-file $TEST_INSTA
 check_error "Unable to generate metadata file"
 
 ## run predictions with on test data with metadata.pkl ##
-cd $SECOND_STAGE_CODE/evaluation 
 python eval.py --dataset_dir=$DATA_DIR --results_dir=$RESULTS_DIR --metadata_filename=$METADATA_FILENAME
