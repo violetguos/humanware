@@ -42,12 +42,9 @@ class BasicBlock(nn.Module):
                 ),
                 nn.BatchNorm2d(self.expansion * planes),
             )
-        dropout_rate = 0.3
-        self.dropout = nn.Dropout(p=dropout_rate)
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
-        # ! add dropout here
         out = self.bn2(self.conv2(out))
         out += self.shortcut(x)
         out = F.relu(out)

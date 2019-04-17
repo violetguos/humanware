@@ -10,8 +10,8 @@ TRAIN:
   TEST_SPLIT: 0.1
   SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
   BATCH_SIZE: 64 # 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
-  NUM_EPOCHS: 90 # minimal number of epoches just to see it's training
-  MAX_PATIENCE: 20 # less than num_ep
+  NUM_EPOCHS: 75 # minimal number of epoches just to see it's training
+  MAX_PATIENCE: 60 # less than num_ep
   LR_SCHEDULER_PARAMS:
     MILESTONES: [20,40]
     GAMMA: 0.1
@@ -31,7 +31,7 @@ MODEL:
     MAX_SEQUENCE_LENGTH: 5
     NUM_CLASSES: 10
 HYPER_PARAMS:
-  N_CALLS: 5
+  N_CALLS: 8
   SPACE:
     LR: [0.0001,0.01]
     MOM: [0.90,0.91]
@@ -40,10 +40,9 @@ HYPER_PARAMS:
     DECAY_RATE: [0.89, 0.90]
     FEATURES_OUTPUT_SIZE: [3000,6000]
   INITIAL_VALUES:
-    LR: 0.001624259550340878
-    MOM: 0.90460279888176
-    WEIGHT_DECAY: 0.00011294798735631021
-    DECAY_STEPS: 10001
-    DECAY_RATE: 0.8963831163393121
-    FEATURES_OUTPUT_SIZE: 4277
-
+    LR: 0.001
+    MOM: 0.9
+    WEIGHT_DECAY: 0.0005
+    DECAY_STEPS: 10000
+    DECAY_RATE: 0.9
+    FEATURES_OUTPUT_SIZE: 4096

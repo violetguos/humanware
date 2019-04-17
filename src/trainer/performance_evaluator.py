@@ -1,6 +1,5 @@
 import torch
 from tqdm import tqdm
-import cv2
 
 
 class PerformanceEvaluator(object):
@@ -22,11 +21,9 @@ class PerformanceEvaluator(object):
         :param model: pytorch model
         :param device: device used (ex: cuda:0)
         :param stats_recorder:
-        :param mode: valid or test. In valid mode, we compute the accuracy
-        faster than in test mode, because in test
+        :param mode: valid or test. In valid mode, we compute the accuracy faster than in test mode, because in test
          mode, it returns the list of predicted number.
-        :param include_length: Set it to true for true accuracy. For comparison
-         purpose only.
+        :param include_length: Set it to true for true accuracy. For comparison purpose only.
         :return:
         """
         model = model.eval()
@@ -45,12 +42,6 @@ class PerformanceEvaluator(object):
             for batch_index, batch in enumerate(tqdm(self.loader)):
                 # get the inputs
                 inputs, targets = batch["image"], batch["target"]
-                # plot 1 input
-                num_plot = 0
-                if num_plot == 1:
-                    num_plot = 0
-                    print("inputs", inputs.size())
-                    cv2.imwrite("test.jpg", inputs[0].permute(1, 2, 0).numpy())
 
                 inputs = inputs.to(device)
                 length_target = targets[:, 0].long().to(device)
@@ -61,8 +52,7 @@ class PerformanceEvaluator(object):
                 digits_predictions = [
                     digit_logits.max(1)[1] for digit_logits in digits_logits
                 ]
-                # print("digits_target", digits_target)
-                # print("digits_predictions", digits_predictions)
+
                 # We first check the sequence length
                 is_output_correct = length_predictions.eq(length_target)
 
@@ -78,16 +68,10 @@ class PerformanceEvaluator(object):
                 )
                 # We then check the digits output
                 for i in range(digits_target.shape[1]):
-                    # print('digits_predictions:', digits_predictions)
-                    # print('digits_predictions[i]:', digits_predictions[i])
-
-                    # print('digits_target', digits_target)
-                    # print('digits_target[:, i]', digits_target[:, i])
-
                     is_digit_correct = digits_predictions[i].eq(
                         digits_target[:, i]
                     )
-                    is_digit_not_there = (digits_target[:, i] == -1)
+                    is_digit_not_there = digits_target[:, i] == -1
                     digits_accuracy[i] += is_digit_correct.float().sum()
                     no_digits_count[i] += is_digit_not_there.float().sum()
                     total_digits_count[i] += (digits_target[:, i] != -1).sum()
@@ -96,7 +80,6 @@ class PerformanceEvaluator(object):
                         digits_logits[i], digits_target[:, i], ignore_index=-1
                     )
                 if mode == "test":
-                    # needs to convert to a number e.g. 500 from [5, 0, 0]
                     for sample_idx in range(digits_target.shape[0]):
                         number_predicted = 0
                         number_true = 0

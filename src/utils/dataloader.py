@@ -7,16 +7,11 @@ import numpy as np
 import torch
 
 from torchvision import transforms
+from torch.utils.data import DataLoader
 
 from utils.transforms import FirstCrop, Rescale, RandomCrop, ToTensor
 from utils.misc import load_obj
 from utils.boxes import extract_labels_boxes
-from torch.utils.data import (
-    DataLoader,
-    ConcatDataset,
-    Subset,
-    # SubsetRandomSampler,
-)
 
 
 class SVHNDataset(data.Dataset):
@@ -202,16 +197,6 @@ def prepare_dataloaders(
         normalize_transform=normalize,
     )
 
-    # The extra file was given in block 2, we MAY need it for block3
-
-    if valid_metadata_filename is not None:
-        extra_metadata = load_obj(valid_metadata_filename)
-        extra_dataset = SVHNDataset(extra_metadata,
-                                    data_dir=valid_dataset_dir,
-                                    transform=transform,
-                                    normalize_transform=normalize)
-        dataset = ConcatDataset([dataset, extra_dataset])
-
     dataset_length = len(metadata)
 
     indices = np.arange(dataset_length)
@@ -220,40 +205,8 @@ def prepare_dataloaders(
         indices = indices[:sample_size]
         dataset_length = sample_size
 
-    if dataset_split in ["extra"]:
-        # mingle
+    if dataset_split in ["train", "extra"]:
 
-        train_length = round(dataset_length * (1 - valid_split - test_split))
-        # valid_length = round(dataset_length * valid_split)
-
-        train_idx = indices[:train_length]
-        valid_idx = indices[train_length:]
-
-        train_subset = Subset(dataset, train_idx)
-        valid_subset = Subset(dataset, valid_idx)
-
-        train_loader = DataLoader(
-            train_subset,
-            batch_size=batch_size,
-            shuffle=True,
-            num_workers=num_worker,
-        )
-        valid_loader = DataLoader(
-            valid_subset,
-            batch_size=batch_size,
-            shuffle=False,
-            num_workers=num_worker,
-        )
-        # test_from_train_loader = DataLoader(
-        #     test_from_train_subset,
-        #     batch_size=batch_size,
-        #     shuffle=False,
-        #     num_workers=num_worker,
-        # )
-
-        return train_loader, valid_loader
-
-    elif dataset_split in ["train"]:
         # Prepare a train and validation dataloader
         valid_loader = None
         if valid_dataset_dir is not None:
