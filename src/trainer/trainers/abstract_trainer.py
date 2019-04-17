@@ -55,6 +55,7 @@ class AbstractTrainer(ABC):
         self.device = device
         self.stats = StatsRecorder()
         self.performance_evaluator = PerformanceEvaluator(self.valid_loader)
+        self.train_evaluator = PerformanceEvaluator(self.train_loader)
         self.valid_evaluator = PerformanceEvaluator(self.valid_loader)
         self.test_evaluator = PerformanceEvaluator(self.test_loader)
         self.output_dir = output_dir
@@ -106,6 +107,8 @@ class AbstractTrainer(ABC):
 
         for epoch in range(self.epoch, self.cfg.TRAIN.NUM_EPOCHS, 1):
             self.train(current_hyper_params)
+            self.train_evaluator.evaluate(
+                self.model, self.device, self.stats, mode="train")
             self.validate(self.model)
             self.epoch = epoch
             print(
