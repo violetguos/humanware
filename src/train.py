@@ -183,7 +183,7 @@ if __name__ == "__main__":
     )
     print("Start training from ", cfg.INPUT_DIR)
     hyper_param_search_state = None
-    
+
     if args.model is not None:
         model_filename = Path(args.model)
         print("\nLoading model from", model_filename.absolute())
@@ -214,6 +214,7 @@ if __name__ == "__main__":
             cfg,
             train_loader,
             valid_loader,
+            None,  # no test loader
             device,
             cfg.OUTPUT_DIR,
             hyper_params=hyper_params,

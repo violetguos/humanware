@@ -27,7 +27,7 @@ class AbstractTrainer(ABC):
         cfg,
         train_loader,
         valid_loader,
-        # test_loader,
+        test_loader,
         device,
         output_dir,
         hyper_params,
@@ -51,12 +51,12 @@ class AbstractTrainer(ABC):
         self.cfg = cfg
         self.train_loader = train_loader
         self.valid_loader = valid_loader
-        # self.test_loader = test_loader
+        self.test_loader = test_loader
         self.device = device
         self.stats = StatsRecorder()
         self.performance_evaluator = PerformanceEvaluator(self.valid_loader)
         self.valid_evaluator = PerformanceEvaluator(self.valid_loader)
-        # self.test_evaluator = PerformanceEvaluator(self.test_loader)
+        self.test_evaluator = PerformanceEvaluator(self.test_loader)
         self.output_dir = output_dir
         self.best_model = None
         self.hyper_params = hyper_params
