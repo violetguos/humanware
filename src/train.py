@@ -7,6 +7,7 @@ import pprint
 import random
 import sys
 from shutil import copyfile
+from pathlib import Path
 
 import dateutil.tz
 import numpy as np
@@ -15,55 +16,14 @@ import torch
 from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.resnet import ResNet50
-from trainer.trainers.lr_scheduler_trainer import LRSchedulerTrainer
+from models.resnet import ResNet34
+from trainer.trainers.lr_scheduler_trainer import BaseTrainer
 from utils.config import cfg, cfg_from_file
 from utils.dataloader import prepare_dataloaders
 from utils.misc import mkdir_p
 
 dir_path = os.path.abspath(os.path.join(os.path.realpath(__file__), "./."))
 sys.path.append(dir_path)
-
-
-def instantiate_model(hyper_params):
-    # modify this function if you want to change the model
-
-    return ModularSVNHClassifier(
-        cfg.MODEL,
-        feature_transformation=ResNet50(hyper_params["FEATURES_OUTPUT_SIZE"]),
-        length_classifier=LengthClassifier(
-            cfg.MODEL, hyper_params["FEATURES_OUTPUT_SIZE"]
-        ),
-        number_classifier=NumberClassifier,
-        hyper_params=hyper_params,
-    )
-
-
-def instantiate_trainer(model, model_optimizer, hyper_params):
-    # modify this function if you want to change the trainer
-
-    return LRSchedulerTrainer(
-        model,
-        model_optimizer,
-        cfg,
-        train_loader,
-        valid_loader,
-        None,
-        device,
-        cfg.OUTPUT_DIR,
-        hyper_params=hyper_params,
-        max_patience=cfg.TRAIN.MAX_PATIENCE,
-    )
-
-
-def instantiate_optimizer(model, hyper_params):
-    # modify this function if you want to change the optimizer
-    return torch.optim.SGD(
-        model.parameters(),
-        lr=hyper_params["LR"],
-        momentum=hyper_params["MOM"],
-        weight_decay=float(hyper_params["WEIGHT_DECAY"]),
-    )
 
 
 def parse_args():
@@ -222,8 +182,52 @@ if __name__ == "__main__":
         num_worker=cfg.TRAIN.NUM_WORKER,
     )
     print("Start training from ", cfg.INPUT_DIR)
+    hyper_param_search_state = None
 
-    current_hyper_params_dict = (cfg.HYPER_PARAMS.INITIAL_VALUES)
+    if args.model is not None:
+        model_filename = Path(args.model)
+        print("\nLoading model from", model_filename.absolute())
+        model = torch.load(model_filename, map_location=device)
+        hyper_param_search_state = model_dict["hyper_param_search_state"]
+
+    def instantiate_model(hyper_params):
+        # modify this function if you want to change the model
+
+        return ModularSVNHClassifier(
+            cfg.MODEL,
+            feature_transformation=ResNet34(
+                hyper_params["FEATURES_OUTPUT_SIZE"]
+            ),
+            length_classifier=LengthClassifier(
+                cfg.MODEL, hyper_params["FEATURES_OUTPUT_SIZE"]
+            ),
+            number_classifier=NumberClassifier,
+            hyper_params=hyper_params,
+        )
+
+    def instantiate_trainer(model, model_optimizer, hyper_params):
+        # modify this function if you want to change the trainer
+
+        return BaseTrainer(
+            model,
+            model_optimizer,
+            cfg,
+            train_loader,
+            valid_loader,
+            None,  # no test loader
+            device,
+            cfg.OUTPUT_DIR,
+            hyper_params=hyper_params,
+            max_patience=cfg.TRAIN.MAX_PATIENCE,
+        )
+
+    def instantiate_optimizer(model, hyper_params):
+        # modify this function if you want to change the optimizer
+        return torch.optim.Adam(
+            model.parameters(),
+            lr=hyper_params["LR"]    
+        )
+    current_hyper_params_dict = cfg.HYPER_PARAMS.INITIAL_VALUES
 
     model = instantiate_model(current_hyper_params_dict)
 

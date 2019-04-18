@@ -27,9 +27,11 @@ class LRSchedulerTrainer(BaseTrainer):
         :param train_loader: train data loader
         :param valid_loade: valid data laoder
         :param device: gpu device used (ex: cuda:0)
-        :param output_dir: output directory where the model and the results will be located
+        :param output_dir: output directory where the model and the
+        results will be located
         :param hyper_params: hyper parameters
-        :param max_patience: max number of iteration without seeing improvement in accuracy
+        :param max_patience: max number of iteration without seeing improvement
+        in accuracy
         """
         super(LRSchedulerTrainer, self).__init__(
             model,
@@ -71,7 +73,8 @@ class LRSchedulerTrainer(BaseTrainer):
         """
         Gets the current state of the trainer
         Adds the lr scheduler state
-        :param hyper_param_search_state: hyper param search state if we are doing an hyper params serach
+        :param hyper_param_search_state: hyper param search state if we are
+         doing an hyper params serach
         (None by default)
         :return state_dict
         """

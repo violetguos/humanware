@@ -1,5 +1,5 @@
-CONFIG_NAME: 'RESNET50'
-DATASET_NAME: ELEM_AI
+CONFIG_NAME: 'RESNET34'
+DATASET_NAME: TUNE_ELEM_AI
 COMET_ML_UPLOAD: False
 SEED: 8
 
@@ -7,13 +7,13 @@ SEED: 8
 TRAIN:
   DATASET_SPLIT: 'train'
   VALID_SPLIT: 0.1 
-  TEST_SPLIT: 0.1
-  SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
-  BATCH_SIZE: 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
-  NUM_EPOCHS: 400 # minimal number of epoches just to see it's training
-  MAX_PATIENCE: 200 # same as the total epoches for testing purposes
+  TEST_SPLIT: 0.0
+  SAMPLE_SIZE: 1080 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
+  BATCH_SIZE: 16 # 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
+  NUM_EPOCHS: 50 # minimal number of epoches just to see it's training
+  MAX_PATIENCE: 38 # less than num_ep
   LR_SCHEDULER_PARAMS:
-    MILESTONES: [80,120]
+    MILESTONES: [20,40]
     GAMMA: 0.1
   NUM_WORKER: 0
 MODEL:
@@ -41,8 +41,9 @@ HYPER_PARAMS:
     FEATURES_OUTPUT_SIZE: [3000,6000]
   INITIAL_VALUES:
     LR: 0.001
-    MOM: 0.9
-    WEIGHT_DECAY: 0.0005
-    DECAY_STEPS: 10000
-    DECAY_RATE: 0.9
-    FEATURES_OUTPUT_SIZE: 4096
+    MOM: 0.90460279888176
+    WEIGHT_DECAY: 0.00011294798735631021
+    DECAY_STEPS: 10001
+    DECAY_RATE: 0.8963831163393121
+    FEATURES_OUTPUT_SIZE: 4277
+    
