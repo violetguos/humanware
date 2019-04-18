@@ -65,6 +65,7 @@ class TBSummaryWriter:
             },
             epoch,
         )
+        self.add_scalar("Train Accuracy", stats.train_accuracies[-1], epoch)
         self.add_scalar("Valid Accuracy", stats.valid_accuracies[-1], epoch)
         self.add_scalar("Length Accuracy", stats.length_accuracy[-1], epoch)
         self.add_scalars(

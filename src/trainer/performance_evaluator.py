@@ -118,4 +118,7 @@ class PerformanceEvaluator(object):
             elif mode == "test":
                 stats_recorder.test_best_accuracy = valid_accuracy
                 stats_recorder.test_losses.append(valid_loss)
+            elif mode == 'train':
+                stats_recorder.train_accuracies.append(valid_accuracy)
+
             return y_pred, y_true
