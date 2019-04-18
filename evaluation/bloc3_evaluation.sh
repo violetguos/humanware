@@ -62,4 +62,5 @@ python $CURR_DIR/converter.py --bbox-file $BBOX_FILE --instance-file $TEST_INSTA
 check_error "Unable to generate metadata file"
 
 ## run predictions with on test data with metadata.pkl ##
+cd $CURR_DIR
 python eval.py --dataset_dir=$DATA_DIR --results_dir=$RESULTS_DIR --metadata_filename=$METADATA_FILENAME
