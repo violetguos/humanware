@@ -11,7 +11,7 @@ TRAIN:
   SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
   BATCH_SIZE: 64 # 64 # small batch size # resnet18 can handle 350 batches, resnet50 64
   NUM_EPOCHS: 75 # minimal number of epoches just to see it's training
-  MAX_PATIENCE: 60 # less than num_ep
+  MAX_PATIENCE: 10 # less than num_ep
   LR_SCHEDULER_PARAMS:
     MILESTONES: [20,40]
     GAMMA: 0.1
