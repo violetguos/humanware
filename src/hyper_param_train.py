@@ -10,7 +10,7 @@ from skopt import Optimizer, utils
 from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.resnet import ResNet34
+from models.resnet import ResNet50
 from train import parse_args, load_config, fix_seed
 from trainer.hyper_params_searcher import HyperParamsSearcher
 from trainer.trainers.base_trainer import BaseTrainer
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     def instantiate_model(hyper_params):
         return ModularSVNHClassifier(
             cfg.MODEL,
-            feature_transformation=ResNet34(
+            feature_transformation=ResNet50(
                 hyper_params["FEATURES_OUTPUT_SIZE"]
             ),
             length_classifier=LengthClassifier(
@@ -101,11 +101,10 @@ if __name__ == "__main__":
 
     # modify this function if you want to change the optimizer
     def instantiate_optimizer(model, hyper_params):
-        return torch.optim.SGD(
+        # modify this function if you want to change the optimizer
+        return torch.optim.Adam(
             model.parameters(),
-            lr=hyper_params["LR"],
-            momentum=hyper_params["MOM"],
-            weight_decay=float(hyper_params["WEIGHT_DECAY"]),
+            lr=hyper_params["LR"]
         )
 
     hyper_param_searcher = HyperParamsSearcher(
