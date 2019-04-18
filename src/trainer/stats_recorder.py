@@ -18,8 +18,8 @@ class StatsRecorder:
     def print_last_epoch_stats(self):
         print("\tTrain Loss: {:.4f}".format(self.train_loss_history[-1]))
         print("\tValid Loss: {:.4f}".format(self.valid_losses[-1]))
-        print("\tValid Accuracy: {:.4f}".format(self.valid_accuracies[-1]))
         print("\tTrain Accuracy: {:.4f}".format(self.train_accuracies[-1]))
+        print("\tValid Accuracy: {:.4f}".format(self.valid_accuracies[-1]))
         print("\tLength Accuracy: {:.4f}".format(self.length_accuracy[-1]))
         print("\tDigits Accuracy: {}".format(self.digits_accuracy[-1]))
 
