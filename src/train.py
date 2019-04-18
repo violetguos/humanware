@@ -16,7 +16,7 @@ import torch
 from models.modular.classifiers.length_classifier import LengthClassifier
 from models.modular.classifiers.number_classifier import NumberClassifier
 from models.modular.modular_svnh_classifier import ModularSVNHClassifier
-from models.resnet import ResNet34
+from models.resnet import ResNet50
 from trainer.trainers.lr_scheduler_trainer import BaseTrainer
 from utils.config import cfg, cfg_from_file
 from utils.dataloader import prepare_dataloaders
@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
         return ModularSVNHClassifier(
             cfg.MODEL,
-            feature_transformation=ResNet34(
+            feature_transformation=ResNet50(
                 hyper_params["FEATURES_OUTPUT_SIZE"]
             ),
             length_classifier=LengthClassifier(
@@ -225,7 +225,7 @@ if __name__ == "__main__":
         # modify this function if you want to change the optimizer
         return torch.optim.Adam(
             model.parameters(),
-            lr=hyper_params["LR"]    
+            lr=hyper_params["LR"]
         )
     current_hyper_params_dict = cfg.HYPER_PARAMS.INITIAL_VALUES
 
