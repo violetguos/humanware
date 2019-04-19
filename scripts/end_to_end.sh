@@ -16,9 +16,9 @@ VALID_DATA_DIR=$ELEM_DIR/valid
 VALID_INSTANCES=$VALID_DATA_DIR/instances_valid.json
 VALID_METADATA_FILENAME=$VALID_DATA_DIR/'avenue_valid_metadata_split.pkl'
 
-SAVED_MODELS=$ROOT_DIR/saved_models
-SECOND_STAGE_MODEL=$SAVED_MODELS/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth
-SECOND_STAGE_CONFIG=$SAVED_MODELS/ELEM_AI_b2_base_trainer_PR7/config.yml
+SAVED_MODELS=$ROOT_DIR/saved_models/RESNET34_val_acc_519
+SECOND_STAGE_MODEL=$SAVED_MODELS/checkpoint_0.519.pth
+SECOND_STAGE_CONFIG=$SAVED_MODELS/config.yml
 
 function check_error(){
     exit_code=`echo $?`
