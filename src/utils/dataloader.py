@@ -188,7 +188,7 @@ def prepare_dataloaders(
         [firstcrop, downscale, random_crop, to_tensor]
     )
     test_transform = transforms.Compose(
-        [firstcrop, Rescale((54, 54)), to_tensor])
+        [FirstCrop(0.1), Rescale((54, 54)), to_tensor])
 
     dataset = SVHNDataset(
         metadata,
