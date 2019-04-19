@@ -223,6 +223,7 @@ if __name__ == "__main__":
 
     def instantiate_optimizer(model, hyper_params):
         # modify this function if you want to change the optimizer
+        print("hyper_params[LR] ", hyper_params["LR"])
         return torch.optim.Adam(
             model.parameters(),
             lr=hyper_params["LR"]    
@@ -241,4 +242,4 @@ if __name__ == "__main__":
         model_optimizer.load_state_dict(model_dict["optimizer_state_dict"])
         current_trainer.load_state_dict(model_dict)
 
-    current_trainer.fit(current_hyper_params_dict)
+    # current_trainer.fit(current_hyper_params_dict)

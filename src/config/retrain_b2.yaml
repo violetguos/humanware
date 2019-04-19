@@ -10,8 +10,8 @@ TRAIN:
   TEST_SPLIT: 0.1
   SAMPLE_SIZE: -1 # Number of samples to use (for debugging purposes), set to -1 to use the entire dataset
   BATCH_SIZE: 32 # small batch size # resnet18 can handle 350 batches, resnet50 64
-  NUM_EPOCHS: 200 # minimal number of epoches just to see it's training
-  MAX_PATIENCE: 80 # less than num epo in order to autosave
+  NUM_EPOCHS: 400 # minimal number of epoches just to see it's training
+  MAX_PATIENCE: 320 # less than num epo in order to autosave
   LR_SCHEDULER_PARAMS:
     MILESTONES: [90,150]
     GAMMA: 0.1
@@ -40,7 +40,7 @@ HYPER_PARAMS:
     DECAY_RATE: [0.89, 0.90]
     FEATURES_OUTPUT_SIZE: [3000,6000]
   INITIAL_VALUES:
-    LR: 0.0005
+    LR: 0.000098
     MOM: 0.9
     WEIGHT_DECAY: 0.0005
     DECAY_STEPS: 10000
