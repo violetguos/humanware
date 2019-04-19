@@ -144,9 +144,9 @@ if __name__ == "__main__":
     # your inference will be saved.
 
     parser.add_argument("--model_path", type=str,
-                        default="../saved_models/ELEM_AI_b2_base_trainer_PR7/checkpoint_0.57.pth")
+                        default="../saved_models/RESNET34_val_acc_519/checkpoint_0.519.pth")
     parser.add_argument("--model_cfg", type=str,
-                        default="../saved_models/ELEM_AI_b2_base_trainer_PR7/config.yml")
+                        default="../saved_models/RESNET34_val_acc_519/config.yml")
     args = parser.parse_args()
     metadata_filename = args.metadata_filename
     dataset_dir = args.dataset_dir
